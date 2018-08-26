@@ -7,6 +7,11 @@ import java.rmi.RemoteException;
 
 import interfaces.IBank;
 
+/**
+ * A client to the bank RMI server.
+ * 
+ * @author vitorgreati, viniciuscampos
+ */
 public class BankClient {
     public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {
         IBank bank = (IBank) Naming.lookup("rmi://localhost/Bank");

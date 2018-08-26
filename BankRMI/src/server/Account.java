@@ -3,6 +3,11 @@ package server;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a bank account.
+ * 
+ * @author viniciuscampos
+ */
 public class Account {
 	
     private Long id;
@@ -36,7 +41,7 @@ public class Account {
     public void updateOperations(Operation operation) {
         operations.add(operation);
     }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
