@@ -2,6 +2,11 @@ package server;
 
 import java.util.Date;
 
+/**
+ * Represents a transfer operation.
+ * 
+ * @author vitorgreati
+ */
 public class Transfer extends Operation{
     private Long id;
 

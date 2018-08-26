@@ -2,6 +2,12 @@ package server;
 
 import java.util.Date;
 
+/**
+ * Represents an operation to be performed
+ * in the bank.
+ * 
+ * @author vitorgreati
+ */
 public abstract class Operation {
     protected Date date;
     protected String type;

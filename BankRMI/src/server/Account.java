@@ -3,6 +3,11 @@ package server;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a bank account.
+ * 
+ * @author vitorgreati
+ */
 public class Account {
 	
     private Long id;

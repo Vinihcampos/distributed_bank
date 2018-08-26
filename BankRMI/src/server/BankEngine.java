@@ -5,6 +5,12 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
+
+/**
+ * Setup bank RMI server.
+ * 
+ * @author vitorgreati
+ */
 public class BankEngine {
 	
     public static void main(String[] args) throws RemoteException, MalformedURLException {

@@ -1,5 +1,9 @@
 package server;
 
+import exceptions.AccountAlreadyExistsException;
+import exceptions.AuthenticationException;
+import exceptions.InvalidAccountException;
+import exceptions.NotEnoughBalanceException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +12,12 @@ import java.rmi.server.UnicastRemoteObject;
 
 import interfaces.IBank;
 
-public class Bank extends UnicastRemoteObject implements IBank, Serializable{
+/**
+ * A remote bank and its operations.
+ * 
+ * @author vitorgreati
+ */
+public class Bank extends UnicastRemoteObject implements IBank, Serializable {
 		
     private static final long serialVersionUID = 1L;
 
@@ -19,67 +28,71 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable{
     }
 
     @Override
-    public Long createAccount(Long id, String password) {
-        if(accounts.containsKey(id)) {
-            return null;
-        }else {
-            accounts.put(id, new Account(id, password));			
-            return id;
-        }
+    public Long createAccount(Long id, String password) throws AccountAlreadyExistsException {
+        
+        if(accounts.containsKey(id)) 
+            throw new AccountAlreadyExistsException(id);
+        
+        accounts.put(id, new Account(id, password));			
+        
+        return id;
     }
 
     @Override
-    public Boolean deposit(Double value, Long account) {
-        if(value <= 0 || !accounts.containsKey(account)) {
-            return false;
-        }else {
-            accounts.get(account).updateBalance(value);
-            accounts.get(account).updateOperations(new Deposit(value));
-            return true;
-        }
+    public void deposit(Double value, Long account) throws InvalidAccountException {
+        
+        if (value <= 0)
+            throw new IllegalArgumentException("Value to deposit must be non-negative");
+        
+        if(!accounts.containsKey(account)) 
+            throw new InvalidAccountException(account);
+        
+        accounts.get(account).updateBalance(value);
+        accounts.get(account).updateOperations(new Deposit(value));
     }
 
     @Override
-    public Boolean withdraw(Long account, String password, Double value) {
-        if(!accounts.containsKey(account)) {
-            return false;
-        }else {
-            if(!accounts.get(account).getPassword().equals(password) || value <= 0 || accounts.get(account).getBalance() < value) {
-                return false;
-            }
+    public void withdraw(Long account, String password, Double value) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
+                   
+        if(value <= 0)
+            throw new IllegalArgumentException("Withdraw values must be non-negative");
+        
+        if(!accounts.containsKey(account))
+            throw new InvalidAccountException(account);
+            
+        if(!accounts.get(account).getPassword().equals(password)) 
+            throw new AuthenticationException();
 
-            accounts.get(account).updateBalance(-value);
-            accounts.get(account).updateOperations(new Withdraw(-value));
+        if(accounts.get(account).getBalance() < value)
+            throw new NotEnoughBalanceException(account);
 
-            return true;
-        }
+        accounts.get(account).updateBalance(-value);
+        accounts.get(account).updateOperations(new Withdraw(-value));
+
     }
 
     @Override
-    public Boolean transfer(Long account, String password, Double value, Long anotherAccount) {
-        if(!accounts.containsKey(account) || !accounts.containsKey(anotherAccount)) {
-            return false;
-        }else {
-            if(!accounts.get(account).getPassword().equals(password) || value <= 0 || accounts.get(account).getBalance() < value) {
-                return false;
-            }
-
-            accounts.get(account).updateBalance(-value);
-            accounts.get(account).updateOperations(new Transfer(anotherAccount, -value));
-            accounts.get(anotherAccount).updateBalance(value);
-            accounts.get(anotherAccount).updateOperations(new Transfer(account, value));
-
-            return true;
-        }
+    public void transfer(Long account, String password, Double value, Long anotherAccount) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
+        
+        withdraw(account, password, value);
+        
+        deposit(value, anotherAccount);
+        
+        accounts.get(account).updateOperations(new Transfer(anotherAccount, -value));
+        accounts.get(anotherAccount).updateOperations(new Transfer(account, value));
+        
     }
 
     @Override
-    public String statement(Long account, String password) {
-        if(!accounts.containsKey(account) || !accounts.get(account).getPassword().equals(password)) {
-            return null;
-        }else {
-            return accounts.get(account).toString();
-        }
+    public String statement(Long account, String password) throws InvalidAccountException, AuthenticationException {
+        
+        if (!accounts.containsKey(account))
+            throw new InvalidAccountException(account);
+        
+        if (!accounts.get(account).getPassword().equals(password))
+            throw new AuthenticationException();
+        
+        return accounts.get(account).toString();
     }
 
 }
