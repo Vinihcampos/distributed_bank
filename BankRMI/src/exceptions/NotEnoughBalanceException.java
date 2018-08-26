@@ -8,7 +8,8 @@ package exceptions;
 import java.rmi.RemoteException;
 
 /**
- *
+ * Raised when the balance is not enough for an operation.
+ * 
  * @author vitorgreati
  */
 public class NotEnoughBalanceException extends RemoteException {

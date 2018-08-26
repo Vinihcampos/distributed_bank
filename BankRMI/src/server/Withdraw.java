@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Represents a withdraw operation.
  * 
- * @author vitorgreati
+ * @author viniciuscampos
  */
 public class Withdraw extends Operation{
 	

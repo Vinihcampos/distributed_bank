@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represents a bank account.
  * 
- * @author vitorgreati
+ * @author viniciuscampos
  */
 public class Account {
 	
@@ -41,7 +41,7 @@ public class Account {
     public void updateOperations(Operation operation) {
         operations.add(operation);
     }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

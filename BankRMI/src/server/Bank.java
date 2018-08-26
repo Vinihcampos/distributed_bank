@@ -15,7 +15,7 @@ import interfaces.IBank;
 /**
  * A remote bank and its operations.
  * 
- * @author vitorgreati
+ * @author vitorgreati, viniciuscampos
  */
 public class Bank extends UnicastRemoteObject implements IBank, Serializable {
 		
@@ -93,6 +93,18 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
             throw new AuthenticationException();
         
         return accounts.get(account).toString();
+    }
+
+    @Override
+    public Double getBalance(Long account, String password) throws RemoteException {
+        
+        if (!accounts.containsKey(account))
+            throw new InvalidAccountException(account);
+        
+        if (!accounts.get(account).getPassword().equals(password))
+            throw new AuthenticationException();
+        
+        return accounts.get(account).getBalance();
     }
 
 }

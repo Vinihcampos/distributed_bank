@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Represents a transfer operation.
  * 
- * @author vitorgreati
+ * @author viniciuscampos
  */
 public class Transfer extends Operation{
     private Long id;
@@ -19,9 +19,9 @@ public class Transfer extends Operation{
 
     @Override
     public String toString() {
-        if(value > 0)
-            return String.valueOf(date) + ", " + type + " from " + id + ": R$ "  + String.valueOf(value);
+        if(getValue() > 0)
+            return String.valueOf(getDate()) + ", " + getType() + " from " + id + ": R$ "  + String.valueOf(getValue());
         else
-            return String.valueOf(date) + ", " + type + " to " + id + ": R$ "  + String.valueOf(value);
+            return String.valueOf(getDate()) + ", " + getType() + " to " + id + ": R$ "  + String.valueOf(getValue());
     }
 }

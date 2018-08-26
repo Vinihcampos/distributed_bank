@@ -8,7 +8,8 @@ package exceptions;
 import java.rmi.RemoteException;
 
 /**
- *
+ * Thrown when an account number already exists.
+ * 
  * @author vitorgreati
  */
 public class AccountAlreadyExistsException extends RemoteException {

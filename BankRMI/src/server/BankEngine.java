@@ -9,7 +9,7 @@ import java.rmi.registry.LocateRegistry;
 /**
  * Setup bank RMI server.
  * 
- * @author vitorgreati
+ * @author viniciuscampos
  */
 public class BankEngine {
 	

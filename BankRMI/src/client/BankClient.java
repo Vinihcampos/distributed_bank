@@ -10,7 +10,7 @@ import interfaces.IBank;
 /**
  * A client to the bank RMI server.
  * 
- * @author vitorgreati
+ * @author vitorgreati, viniciuscampos
  */
 public class BankClient {
     public static void main(String[] args) throws MalformedURLException, RemoteException, NotBoundException {

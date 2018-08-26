@@ -61,5 +61,15 @@ public interface IBank extends Remote {
      * @return the account statement
      * @throws RemoteException 
      */
-    public String statement(Long account, String password) throws RemoteException;	
+    public String statement(Long account, String password) throws RemoteException;
+    
+    /**
+     * Check account balance.
+     * 
+     * @param account
+     * @param password
+     * @return the balance
+     * @throws java.rmi.RemoteException
+     */
+    public Double getBalance(Long account, String password) throws RemoteException;
 }

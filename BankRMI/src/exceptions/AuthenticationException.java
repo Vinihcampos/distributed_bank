@@ -8,7 +8,8 @@ package exceptions;
 import java.rmi.RemoteException;
 
 /**
- *
+ * Thrown when the authentication fails.
+ * 
  * @author vitorgreati
  */
 public class AuthenticationException extends RemoteException {
