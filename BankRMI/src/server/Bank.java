@@ -3,14 +3,18 @@ package server;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import interfaces.IBank;
 
-public class Bank implements IBank, Serializable{
+public class Bank extends UnicastRemoteObject implements IBank, Serializable{
+		
+	private static final long serialVersionUID = 1L;
 	
 	private Map<Long, Account> accounts;
 	
-	public Bank() {
+	public Bank() throws RemoteException {
 		accounts = new HashMap<>();
 	}
 	

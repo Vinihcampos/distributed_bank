@@ -1,6 +1,8 @@
 package interfaces;
 
-public interface IBank {
+import java.rmi.Remote;
+
+public interface IBank extends Remote{
 	
 	public Long createAccount(Long id, String password);
 	public Boolean deposit(Double value, Long account);
