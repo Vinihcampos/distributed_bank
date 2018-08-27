@@ -6,6 +6,10 @@
 package client;
 
 import com.sun.xml.internal.ws.util.StringUtils;
+import exceptions.AccountAlreadyExistsException;
+import exceptions.AuthenticationException;
+import exceptions.InvalidAccountException;
+import exceptions.NotEnoughBalanceException;
 import interfaces.IBank;
 import java.awt.Color;
 import java.math.BigInteger;
@@ -157,6 +161,11 @@ public class BankClient extends javax.swing.JFrame {
         });
 
         jButtonTransfer.setText("Transfer");
+        jButtonTransfer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTransferActionPerformed(evt);
+            }
+        });
 
         jButtonBalance.setText("Balance");
         jButtonBalance.addActionListener(new java.awt.event.ActionListener() {
@@ -264,7 +273,36 @@ public class BankClient extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonWithdrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWithdrawActionPerformed
-        // TODO add your handling code here:
+        if(!jTextFieldAccount.getText().isEmpty() && jPassword.getPassword().length > 0 && !jFormattedTextFieldValue.getText().isEmpty()){
+            try {                
+                MessageDigest m = MessageDigest.getInstance("MD5");
+                String auxPassword = String.valueOf(jPassword.getPassword());                
+                m.update(auxPassword.getBytes(),0,auxPassword.length());
+                
+                Long account = Long.valueOf(jTextFieldAccount.getText());
+                String password = new BigInteger(1,m.digest()).toString(16);
+                Double value = Double.valueOf(jFormattedTextFieldValue.getText());
+                
+                bank.withdraw(account, password, value);
+                jTextAreaResult.setForeground(Color.GREEN);
+                jTextAreaResult.setText("Saque realizado com sucesso!");
+            }catch (IllegalArgumentException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Saque inválido, informe um valor positivo!");
+            }catch(InvalidAccountException ex){
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Conta inexistente!");
+            }catch(AuthenticationException ex){
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Senha inválida!");
+            }catch(NotEnoughBalanceException ex){
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Saldo insuficiente!");
+            }catch (NoSuchAlgorithmException | RemoteException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Não foi possível realizar saque!");
+            }
+        }
     }//GEN-LAST:event_jButtonWithdrawActionPerformed
 
     private void jButtonCreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateAccountActionPerformed
@@ -279,7 +317,10 @@ public class BankClient extends javax.swing.JFrame {
                 bank.createAccount(Long.valueOf(account), password);
                 jTextAreaResult.setForeground(Color.GREEN);
                 jTextAreaResult.setText("Conta criada com sucesso!");
-            } catch (NoSuchAlgorithmException | RemoteException ex) {
+            }catch (AccountAlreadyExistsException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Conta existente!");
+            }catch (NoSuchAlgorithmException | RemoteException ex) {
                 jTextAreaResult.setForeground(Color.RED);
                 jTextAreaResult.setText("Não foi possível criar a conta!");
             }
@@ -295,6 +336,12 @@ public class BankClient extends javax.swing.JFrame {
                 
                 jTextAreaResult.setForeground(Color.GREEN);
                 jTextAreaResult.setText("Depósito realizado com sucesso!");
+            } catch (InvalidAccountException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Conta inexistente!");
+            } catch (IllegalArgumentException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Depósito inválido, informe um valor positivo!");
             } catch (RemoteException ex) {
                 jTextAreaResult.setForeground(Color.RED);
                 jTextAreaResult.setText("Não foi possível realizar despósito!");
@@ -327,12 +374,51 @@ public class BankClient extends javax.swing.JFrame {
                 Double balance = bank.getBalance(Long.valueOf(account), password);
                 jTextAreaResult.setForeground(Color.GREEN);
                 jTextAreaResult.setText("Saldo atual: R$ " + String.valueOf(balance));
+            } catch (InvalidAccountException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Conta inexistente!");
+            } catch (AuthenticationException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Senha inválida!");
             } catch (NoSuchAlgorithmException | RemoteException ex) {
                 jTextAreaResult.setForeground(Color.RED);
                 jTextAreaResult.setText("Não foi possível consultar o saldo!");
             }
         }
     }//GEN-LAST:event_jButtonBalanceActionPerformed
+
+    private void jButtonTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTransferActionPerformed
+        if(!jTextFieldAccount.getText().isEmpty() && jPassword.getPassword().length > 0 &&
+           !jTextFieldAnotherAccount.getText().isEmpty() && !jFormattedTextFieldValue.getText().isEmpty()){
+            
+            try {
+                Long account = Long.valueOf(jTextFieldAccount.getText());
+                Long anotherAccount = Long.valueOf(jTextFieldAnotherAccount.getText());
+                MessageDigest m = MessageDigest.getInstance("MD5");
+                
+                String auxPassword = String.valueOf(jPassword.getPassword());
+                m.update(auxPassword.getBytes(),0,auxPassword.length());
+                String password = new BigInteger(1,m.digest()).toString(16);
+                
+                Double value = Double.valueOf(jFormattedTextFieldValue.getText());
+                
+                bank.transfer(account, password, value, anotherAccount);
+                jTextAreaResult.setForeground(Color.GREEN);
+                jTextAreaResult.setText("Transferência realizada com sucesso!");
+            } catch (InvalidAccountException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Conta inexistente!");
+            } catch (AuthenticationException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Senha inválida!");
+            } catch (NotEnoughBalanceException ex) {
+                jTextAreaResult.setForeground(Color.RED);
+                jTextAreaResult.setText("Saldo insuficiente!");
+            } catch (NoSuchAlgorithmException | RemoteException ex) {
+                Logger.getLogger(BankClient.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+        }
+    }//GEN-LAST:event_jButtonTransferActionPerformed
 
     /**
      * @param args the command line arguments

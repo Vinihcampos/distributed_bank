@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
  * 
  * @author vitorgreati
  */
-public class InvalidAccountException extends RemoteException {
+public class InvalidAccountException extends Exception {
     
     public InvalidAccountException(Long account){
         super("Invalid account: " + account);

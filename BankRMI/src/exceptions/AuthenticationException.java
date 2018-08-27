@@ -5,14 +5,12 @@
  */
 package exceptions;
 
-import java.rmi.RemoteException;
-
 /**
  * Thrown when the authentication fails.
  * 
  * @author vitorgreati
  */
-public class AuthenticationException extends RemoteException {
+public class AuthenticationException extends Exception {
     
     public AuthenticationException() {
         super("Invalid account/password");

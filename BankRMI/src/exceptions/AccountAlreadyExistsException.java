@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
  * 
  * @author vitorgreati
  */
-public class AccountAlreadyExistsException extends RemoteException {
+public class AccountAlreadyExistsException extends Exception {
     
     public AccountAlreadyExistsException(Long account) {
         super("Account number " + account + " already in use");

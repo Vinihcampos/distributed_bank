@@ -39,7 +39,7 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
     }
 
     @Override
-    public void deposit(Double value, Long account) throws InvalidAccountException {
+    public void deposit(Double value, Long account) throws IllegalArgumentException, InvalidAccountException {
         
         if (value <= 0)
             throw new IllegalArgumentException("Value to deposit must be non-negative");
@@ -96,7 +96,7 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
     }
 
     @Override
-    public Double getBalance(Long account, String password) throws RemoteException {
+    public Double getBalance(Long account, String password) throws InvalidAccountException, AuthenticationException {
         
         if (!accounts.containsKey(account))
             throw new InvalidAccountException(account);
