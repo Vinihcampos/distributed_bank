@@ -12,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import interfaces.IBank;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A remote bank and its operations.
@@ -48,8 +49,9 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
         if(!accounts.containsKey(account)) 
             throw new InvalidAccountException(account);
         
+        accounts.get(account).updateBalance(value);
+        
         if(updateOperation){
-            accounts.get(account).updateBalance(value);
             accounts.get(account).updateOperations(new Deposit(value));
         }
     }
@@ -69,8 +71,9 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
         if(accounts.get(account).getBalance() < value)
             throw new NotEnoughBalanceException(account);
         
+        accounts.get(account).updateBalance(-value);
+        
         if(updateOperation){
-            accounts.get(account).updateBalance(-value);
             accounts.get(account).updateOperations(new Withdraw(-value));
         }
     }
@@ -78,7 +81,7 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
     @Override
     public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
         
-        if(account == anotherAccount){
+        if(Objects.equals(account, anotherAccount)){
             throw new IllegalArgumentException("As contas precisam ser distintas!");
         }
         

@@ -46,17 +46,17 @@ public class BankTests {
     @Test
     public void createAccountTest() throws RemoteException, AccountAlreadyExistsException, InvalidAccountException, AuthenticationException {
         bank.createAccount(123L, "123456789");
-        assertEquals("", bank.statement(123L, "123456789"));
+        assertEquals(new ArrayList<>(), bank.statement(123L, "123456789"));
     }
     
     @Test
-    public void sameNumberAccountTest() throws AccountAlreadyExistsException {
+    public void sameNumberAccountTest() {
         try {
             bank.createAccount(1234L, "123456789");
             bank.createAccount(1234L, "123456789");
             fail("Accounts with the same name");
-        } catch (RemoteException ex) {
-            Logger.getLogger(BankTests.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException | AccountAlreadyExistsException ex) {
+            //Logger.getLogger(BankTests.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -84,7 +84,7 @@ public class BankTests {
     }
     
     @Test
-    public void withdrawExceptionsTest() throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException, NotEnoughBalanceException {
+    public void withdrawExceptionsTest() {
         try {
             bank.withdraw(123456L, "123456789", -100.0, true);
             fail("Negative values not allowed");
@@ -95,7 +95,7 @@ public class BankTests {
             bank.withdraw(123456L, "12345678", 10.0, true);
             fail("Authentication fail");
             
-        } catch (RemoteException | IllegalArgumentException ex) {
+        } catch (RemoteException | IllegalArgumentException | InvalidAccountException | AuthenticationException | NotEnoughBalanceException ex) {
             Logger.getLogger(BankTests.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
@@ -113,7 +113,7 @@ public class BankTests {
     }
     
     @Test
-    public void transferExceptionsTest() throws AccountAlreadyExistsException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
+    public void transferExceptionsTest() {
         
         Long acc1 = null, acc2 = null;
         
@@ -133,13 +133,18 @@ public class BankTests {
             bank.transfer(acc1, "1234", 1001.0, acc2);
             fail("Authentication fail");
             
+            bank.transfer(acc1, "123", 1001.0, acc1);
+            fail("Authentication fail");
+            
         } catch(RemoteException | IllegalArgumentException e) {            
             try {
                 assertEquals(new Double(1000.0), bank.getBalance(acc1, "123"));
                 assertEquals(new Double(0.0), bank.getBalance(acc2, "123"));
-            } catch (RemoteException ex) {
-                Logger.getLogger(BankTests.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException | InvalidAccountException | AuthenticationException ex) {
+                //Logger.getLogger(BankTests.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } catch (AccountAlreadyExistsException | InvalidAccountException | AuthenticationException | NotEnoughBalanceException ex) {
+            //Logger.getLogger(BankTests.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
