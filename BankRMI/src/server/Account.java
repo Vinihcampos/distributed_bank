@@ -42,16 +42,11 @@ public class Account {
         operations.add(operation);
     }
     
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        for(Operation o : operations) {
-            sb.append(o.toString());
-            sb.append("\n");
-        }
-
-        return sb.toString();
+    public List<String> getStatement() {
+        List<String> stmt = new ArrayList<>();
+        for(Operation o : operations) 
+            stmt.add(o.toString() + "\n");
+        return stmt;
     }
 		
 }

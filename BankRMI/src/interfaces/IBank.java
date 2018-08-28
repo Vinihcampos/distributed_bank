@@ -6,6 +6,7 @@ import exceptions.InvalidAccountException;
 import exceptions.NotEnoughBalanceException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * Remote interface for the Bank.
@@ -65,7 +66,7 @@ public interface IBank extends Remote {
      * @return the account statement
      * @throws RemoteException 
      */
-    public String statement(Long account, String password) throws InvalidAccountException, AuthenticationException, RemoteException;
+    public List<String> statement(Long account, String password) throws InvalidAccountException, AuthenticationException, RemoteException;
     
     /**
      * Check account balance.

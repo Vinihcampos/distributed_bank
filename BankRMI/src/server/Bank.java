@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import interfaces.IBank;
+import java.util.List;
 
 /**
  * A remote bank and its operations.
@@ -84,7 +85,7 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
     }
 
     @Override
-    public String statement(Long account, String password) throws InvalidAccountException, AuthenticationException {
+    public List<String> statement(Long account, String password) throws InvalidAccountException, AuthenticationException {
         
         if (!accounts.containsKey(account))
             throw new InvalidAccountException(account);
@@ -92,7 +93,7 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
         if (!accounts.get(account).getPassword().equals(password))
             throw new AuthenticationException();
         
-        return accounts.get(account).toString();
+        return accounts.get(account).getStatement();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -19,9 +21,10 @@ public class Transfer extends Operation{
 
     @Override
     public String toString() {
+        final DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         if(getValue() > 0)
-            return String.valueOf(getDate()) + ", " + getType() + " from " + id + ": R$ "  + String.valueOf(getValue());
+            return df.format(getDate()) + "," + getType() + " from " + id + ","  + String.valueOf(getValue());
         else
-            return String.valueOf(getDate()) + ", " + getType() + " to " + id + ": R$ "  + String.valueOf(getValue());
+            return df.format(getDate()) + "," + getType() + " to " + id + ","  + String.valueOf(getValue());
     }
 }

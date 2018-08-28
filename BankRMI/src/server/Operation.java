@@ -1,5 +1,7 @@
 package server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -23,7 +25,8 @@ public abstract class Operation {
 
     @Override
     public String toString() {
-        return String.valueOf(getDate()) + ", " + getType() + ": R$ "  + String.valueOf(getValue());
+        final DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        return df.format(getDate()) + "," + getType() + ","  + String.valueOf(getValue());
     }
 
     @Override
