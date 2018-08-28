@@ -40,23 +40,25 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
     }
 
     @Override
-    public void deposit(Double value, Long account) throws IllegalArgumentException, InvalidAccountException {
+    public void deposit(Double value, Long account, Boolean updateOperation) throws IllegalArgumentException, InvalidAccountException {
         
         if (value <= 0)
-            throw new IllegalArgumentException("Value to deposit must be non-negative");
+            throw new IllegalArgumentException("Valor do depósito precisa ser positivo!");
         
         if(!accounts.containsKey(account)) 
             throw new InvalidAccountException(account);
         
-        accounts.get(account).updateBalance(value);
-        accounts.get(account).updateOperations(new Deposit(value));
+        if(updateOperation){
+            accounts.get(account).updateBalance(value);
+            accounts.get(account).updateOperations(new Deposit(value));
+        }
     }
 
     @Override
-    public void withdraw(Long account, String password, Double value) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
+    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
                    
         if(value <= 0)
-            throw new IllegalArgumentException("Withdraw values must be non-negative");
+            throw new IllegalArgumentException("O saque requer valores positivos!");
         
         if(!accounts.containsKey(account))
             throw new InvalidAccountException(account);
@@ -66,18 +68,22 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
 
         if(accounts.get(account).getBalance() < value)
             throw new NotEnoughBalanceException(account);
-
-        accounts.get(account).updateBalance(-value);
-        accounts.get(account).updateOperations(new Withdraw(-value));
-
+        
+        if(updateOperation){
+            accounts.get(account).updateBalance(-value);
+            accounts.get(account).updateOperations(new Withdraw(-value));
+        }
     }
 
     @Override
-    public void transfer(Long account, String password, Double value, Long anotherAccount) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
+    public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
         
-        withdraw(account, password, value);
+        if(account == anotherAccount){
+            throw new IllegalArgumentException("As contas precisam ser distintas!");
+        }
         
-        deposit(value, anotherAccount);
+        withdraw(account, password, value, false);        
+        deposit(value, anotherAccount, false);
         
         accounts.get(account).updateOperations(new Transfer(anotherAccount, -value));
         accounts.get(anotherAccount).updateOperations(new Transfer(account, value));

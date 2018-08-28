@@ -5,6 +5,9 @@
  */
 package bank;
 
+import exceptions.AccountAlreadyExistsException;
+import exceptions.AuthenticationException;
+import exceptions.InvalidAccountException;
 import exceptions.NotEnoughBalanceException;
 import interfaces.IBank;
 import java.net.MalformedURLException;
@@ -41,13 +44,13 @@ public class BankTests {
     }
     
     @Test
-    public void createAccountTest() throws RemoteException {
+    public void createAccountTest() throws RemoteException, AccountAlreadyExistsException, InvalidAccountException, AuthenticationException {
         bank.createAccount(123L, "123456789");
         assertEquals("", bank.statement(123L, "123456789"));
     }
     
     @Test
-    public void sameNumberAccountTest() {
+    public void sameNumberAccountTest() throws AccountAlreadyExistsException {
         try {
             bank.createAccount(1234L, "123456789");
             bank.createAccount(1234L, "123456789");
@@ -58,38 +61,38 @@ public class BankTests {
     }
     
     @Test
-    public void depositTest() throws RemoteException {
+    public void depositTest() throws RemoteException, AccountAlreadyExistsException, InvalidAccountException, AuthenticationException {
         bank.createAccount(12345L, "123456789");
         assertEquals(new Double(0.0), bank.getBalance(12345L, "123456789"));
-        bank.deposit(100.0, 12345L);
+        bank.deposit(100.0, 12345L, true);
         assertEquals(new Double(100.0), bank.getBalance(12345L, "123456789"));
         try {
-            bank.deposit(-100.0, 12345L);
+            bank.deposit(-100.0, 12345L, true);
             fail("Negative values not allowed");
         } catch (IllegalArgumentException e) {}
     }
     
     @Test
-    public void withdrawTest() throws RemoteException {
+    public void withdrawTest() throws RemoteException, AccountAlreadyExistsException, IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
         bank.createAccount(123456L, "123456789");
-        bank.deposit(1000.0, 123456L);
-        bank.withdraw(123456L, "123456789", 200.0);
+        bank.deposit(1000.0, 123456L, true);
+        bank.withdraw(123456L, "123456789", 200.0, true);
         assertEquals(new Double(800.0), bank.getBalance(123456L, "123456789"));
-        bank.withdraw(123456L, "123456789", 800.0);
+        bank.withdraw(123456L, "123456789", 800.0, true);
         assertEquals(new Double(0.0), bank.getBalance(123456L, "123456789"));
 
     }
     
     @Test
-    public void withdrawExceptionsTest() {
+    public void withdrawExceptionsTest() throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException, NotEnoughBalanceException {
         try {
-            bank.withdraw(123456L, "123456789", -100.0);
+            bank.withdraw(123456L, "123456789", -100.0, true);
             fail("Negative values not allowed");
 
-            bank.withdraw(123456L, "123456789", 10.0);
+            bank.withdraw(123456L, "123456789", 10.0, true);
             fail("Not enough balance");
             
-            bank.withdraw(123456L, "12345678", 10.0);
+            bank.withdraw(123456L, "12345678", 10.0, true);
             fail("Authentication fail");
             
         } catch (RemoteException | IllegalArgumentException ex) {
@@ -98,19 +101,19 @@ public class BankTests {
     }
     
     @Test
-    public void transferTest() throws RemoteException {
+    public void transferTest() throws RemoteException, AccountAlreadyExistsException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
         Long acc1 = bank.createAccount(2L, "123");
         Long acc2 = bank.createAccount(1L, "123");
         assertEquals(new Double(0.0), bank.getBalance(acc1, "123"));
         assertEquals(new Double(0.0), bank.getBalance(acc2, "123"));
-        bank.deposit(300.0, acc1);
+        bank.deposit(300.0, acc1, true);
         bank.transfer(acc1, "123", 100.0, acc2);
         assertEquals(new Double(200.0), bank.getBalance(acc1, "123"));
         assertEquals(new Double(100.0), bank.getBalance(acc2, "123"));
     }
     
     @Test
-    public void transferExceptionsTest() {
+    public void transferExceptionsTest() throws AccountAlreadyExistsException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
         
         Long acc1 = null, acc2 = null;
         
@@ -119,7 +122,7 @@ public class BankTests {
             acc1 = bank.createAccount(3L, "123");
             acc2 = bank.createAccount(4L, "123");
             
-            bank.deposit(1000.0, acc1);
+            bank.deposit(1000.0, acc1, true);
             
             bank.transfer(acc1, "123", -100.0, acc2);
             fail("Value can't be negative");

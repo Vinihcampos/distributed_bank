@@ -103,13 +103,13 @@ public class BankClient extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanelAccount.setBorder(javax.swing.BorderFactory.createTitledBorder("Account Info"));
+        jPanelAccount.setBorder(javax.swing.BorderFactory.createTitledBorder("Conta"));
 
-        jLabelAccount.setText("Account: ");
+        jLabelAccount.setText("Conta: ");
 
-        jLabelPassword.setText("Password: ");
+        jLabelPassword.setText("Senha: ");
 
-        jLabelAnotherAccount.setText("Another Account: ");
+        jLabelAnotherAccount.setText("Outra Conta: ");
 
         jTextFieldAccount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -158,9 +158,9 @@ public class BankClient extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanelOperations.setBorder(javax.swing.BorderFactory.createTitledBorder("Operations"));
+        jPanelOperations.setBorder(javax.swing.BorderFactory.createTitledBorder("Operações"));
 
-        jButtonCreateAccount.setText("Create Account");
+        jButtonCreateAccount.setText("Criar Conta");
         jButtonCreateAccount.setMaximumSize(new java.awt.Dimension(150, 25));
         jButtonCreateAccount.setMinimumSize(new java.awt.Dimension(150, 25));
         jButtonCreateAccount.setPreferredSize(new java.awt.Dimension(150, 25));
@@ -170,7 +170,7 @@ public class BankClient extends javax.swing.JFrame {
             }
         });
 
-        jButtonDeposit.setText("Deposit");
+        jButtonDeposit.setText("Depositar");
         jButtonDeposit.setMaximumSize(new java.awt.Dimension(150, 25));
         jButtonDeposit.setMinimumSize(new java.awt.Dimension(150, 25));
         jButtonDeposit.setPreferredSize(new java.awt.Dimension(150, 25));
@@ -180,7 +180,7 @@ public class BankClient extends javax.swing.JFrame {
             }
         });
 
-        jButtonWithdraw.setText("Withdraw");
+        jButtonWithdraw.setText("Sacar");
         jButtonWithdraw.setMaximumSize(new java.awt.Dimension(150, 25));
         jButtonWithdraw.setMinimumSize(new java.awt.Dimension(150, 25));
         jButtonWithdraw.setPreferredSize(new java.awt.Dimension(150, 25));
@@ -190,28 +190,28 @@ public class BankClient extends javax.swing.JFrame {
             }
         });
 
-        jButtonTransfer.setText("Transfer");
+        jButtonTransfer.setText("Transferir");
         jButtonTransfer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTransferActionPerformed(evt);
             }
         });
 
-        jButtonBalance.setText("Balance");
+        jButtonBalance.setText("Consultar Saldo");
         jButtonBalance.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBalanceActionPerformed(evt);
             }
         });
 
-        jButtonStatement.setText("Bank Statement");
+        jButtonStatement.setText("Consultar Extrato");
         jButtonStatement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStatementActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Value:");
+        jLabel1.setText("Valor: ");
 
         jFormattedTextFieldValue.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
 
@@ -260,7 +260,7 @@ public class BankClient extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanelResult.setBorder(javax.swing.BorderFactory.createTitledBorder("Result"));
+        jPanelResult.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultado"));
 
         jScrollPane2.setViewportView(jTextPaneResult);
 
@@ -316,7 +316,7 @@ public class BankClient extends javax.swing.JFrame {
                 String password = new BigInteger(1,m.digest()).toString(16);
                 Double value = Double.valueOf(jFormattedTextFieldValue.getText());
                 
-                bank.withdraw(account, password, value);
+                bank.withdraw(account, password, value, true);
                 setText("Saque realizado com sucesso!", Color.GREEN);
             }catch (IllegalArgumentException ex) {
                 setText("Saque inválido, informe um valor positivo!", Color.RED);
@@ -356,7 +356,7 @@ public class BankClient extends javax.swing.JFrame {
             try {
                 Long account = Long.valueOf(jTextFieldAccount.getText());
                 Double value = Double.valueOf(jFormattedTextFieldValue.getText());
-                bank.deposit(value, account);
+                bank.deposit(value, account,true);
                 
                 setText("Depósito realizado com sucesso!", Color.GREEN);
             }catch (IllegalArgumentException ex) {
@@ -421,6 +421,8 @@ public class BankClient extends javax.swing.JFrame {
                 
                 bank.transfer(account, password, value, anotherAccount);
                 setText("Transferência realizada com sucesso!", Color.GREEN);
+            }catch (IllegalArgumentException ex) {
+                setText(ex.getMessage(), Color.RED);
             }catch(InvalidAccountException ex){
                 setText("Conta inexistente!", Color.RED);
             }catch(AuthenticationException ex){

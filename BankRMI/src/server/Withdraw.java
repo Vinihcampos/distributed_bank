@@ -11,7 +11,7 @@ public class Withdraw extends Operation{
 	
     public Withdraw(Double value) {
         this.date = new Date();
-        this.type = "WITHDRAW";
+        this.type = "SAQUE";
         this.value = value;
     }
 }

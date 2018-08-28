@@ -32,7 +32,7 @@ public interface IBank extends Remote {
      * @param account
      * @throws RemoteException 
      */
-    public void deposit(Double value, Long account) throws IllegalArgumentException, InvalidAccountException, RemoteException;
+    public void deposit(Double value, Long account, Boolean updateOperation) throws IllegalArgumentException, InvalidAccountException, RemoteException;
     
     /**
      * Withdraw a value from an account.
@@ -45,7 +45,7 @@ public interface IBank extends Remote {
      * @param value
      * @throws RemoteException 
      */
-    public void withdraw(Long account, String password, Double value) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
+    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
     
     /**
      * Transfers an amount from an account to another.
@@ -56,7 +56,7 @@ public interface IBank extends Remote {
      * @param anotherAccount
      * @throws RemoteException 
      */
-    public void transfer(Long account, String password, Double value, Long anotherAccount) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
+    public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
     
     /**
      * Returns an account statement (operations performed).
