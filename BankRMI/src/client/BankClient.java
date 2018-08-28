@@ -306,7 +306,7 @@ public class BankClient extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonWithdrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWithdrawActionPerformed
-        if(!jTextFieldAccount.getText().isEmpty() && jPassword.getPassword().length > 0 && !jFormattedTextFieldValue.getText().isEmpty()){
+        if(!jTextFieldAccount.getText().isEmpty() && jPassword.getPassword().length > 0 && !jFormattedTextFieldValue.getText().replace(",",".").isEmpty()){
             try {                
                 MessageDigest m = MessageDigest.getInstance("MD5");
                 String auxPassword = String.valueOf(jPassword.getPassword());                
@@ -314,7 +314,7 @@ public class BankClient extends javax.swing.JFrame {
                 
                 Long account = Long.valueOf(jTextFieldAccount.getText());
                 String password = new BigInteger(1,m.digest()).toString(16);
-                Double value = Double.valueOf(jFormattedTextFieldValue.getText());
+                Double value = Double.valueOf(jFormattedTextFieldValue.getText().replace(",","."));
                 
                 bank.withdraw(account, password, value, true);
                 setText("Saque realizado com sucesso!", Color.GREEN);
@@ -352,10 +352,10 @@ public class BankClient extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCreateAccountActionPerformed
 
     private void jButtonDepositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDepositActionPerformed
-        if(!jTextFieldAccount.getText().isEmpty() && !jFormattedTextFieldValue.getText().isEmpty()){
+        if(!jTextFieldAccount.getText().isEmpty() && !jFormattedTextFieldValue.getText().replace(",",".").isEmpty()){
             try {
                 Long account = Long.valueOf(jTextFieldAccount.getText());
-                Double value = Double.valueOf(jFormattedTextFieldValue.getText());
+                Double value = Double.valueOf(jFormattedTextFieldValue.getText().replace(",","."));
                 bank.deposit(value, account,true);
                 
                 setText("Depósito realizado com sucesso!", Color.GREEN);
@@ -406,7 +406,7 @@ public class BankClient extends javax.swing.JFrame {
 
     private void jButtonTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTransferActionPerformed
         if(!jTextFieldAccount.getText().isEmpty() && jPassword.getPassword().length > 0 &&
-           !jTextFieldAnotherAccount.getText().isEmpty() && !jFormattedTextFieldValue.getText().isEmpty()){
+           !jTextFieldAnotherAccount.getText().isEmpty() && !jFormattedTextFieldValue.getText().replace(",",".").isEmpty()){
             
             try {
                 Long account = Long.valueOf(jTextFieldAccount.getText());
@@ -417,7 +417,7 @@ public class BankClient extends javax.swing.JFrame {
                 m.update(auxPassword.getBytes(),0,auxPassword.length());
                 String password = new BigInteger(1,m.digest()).toString(16);
                 
-                Double value = Double.valueOf(jFormattedTextFieldValue.getText());
+                Double value = Double.valueOf(jFormattedTextFieldValue.getText().replace(",","."));
                 
                 bank.transfer(account, password, value, anotherAccount);
                 setText("Transferência realizada com sucesso!", Color.GREEN);

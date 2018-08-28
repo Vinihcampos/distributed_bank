@@ -84,6 +84,9 @@ public class Bank extends UnicastRemoteObject implements IBank, Serializable {
         if(Objects.equals(account, anotherAccount)){
             throw new IllegalArgumentException("As contas precisam ser distintas!");
         }
+    
+        if(!accounts.containsKey(anotherAccount))
+            throw new InvalidAccountException(anotherAccount);
         
         withdraw(account, password, value, false);        
         deposit(value, anotherAccount, false);
