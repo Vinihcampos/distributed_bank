@@ -21,6 +21,7 @@ public interface IBank extends Remote {
      * @param id
      * @param password
      * @return the account id
+     * @throws exceptions.AccountAlreadyExistsException
      * @throws RemoteException 
      */
     public Long createAccount(Long id, String password) throws AccountAlreadyExistsException, RemoteException;
@@ -30,7 +31,9 @@ public interface IBank extends Remote {
      * 
      * @param value
      * @param account
+     * @param updateOperation
      * @throws RemoteException 
+     * @throws exceptions.InvalidAccountException 
      */
     public void deposit(Double value, Long account, Boolean updateOperation) throws IllegalArgumentException, InvalidAccountException, RemoteException;
     
@@ -43,7 +46,11 @@ public interface IBank extends Remote {
      * @param account
      * @param password
      * @param value
+     * @param updateOperation
+     * @throws exceptions.InvalidAccountException
+     * @throws exceptions.AuthenticationException
      * @throws RemoteException 
+     * @throws exceptions.NotEnoughBalanceException 
      */
     public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
     
@@ -55,6 +62,9 @@ public interface IBank extends Remote {
      * @param value
      * @param anotherAccount
      * @throws RemoteException 
+     * @throws exceptions.InvalidAccountException 
+     * @throws exceptions.AuthenticationException 
+     * @throws exceptions.NotEnoughBalanceException 
      */
     public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
     
@@ -64,6 +74,8 @@ public interface IBank extends Remote {
      * @param account
      * @param password
      * @return the account statement
+     * @throws exceptions.InvalidAccountException
+     * @throws exceptions.AuthenticationException
      * @throws RemoteException 
      */
     public List<String> statement(Long account, String password) throws InvalidAccountException, AuthenticationException, RemoteException;
@@ -74,6 +86,8 @@ public interface IBank extends Remote {
      * @param account
      * @param password
      * @return the balance
+     * @throws exceptions.InvalidAccountException
+     * @throws exceptions.AuthenticationException
      * @throws java.rmi.RemoteException
      */
     public Double getBalance(Long account, String password) throws InvalidAccountException, AuthenticationException, RemoteException;
