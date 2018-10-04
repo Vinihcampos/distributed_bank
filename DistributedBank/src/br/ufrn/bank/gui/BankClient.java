@@ -114,15 +114,15 @@ public class BankClient extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
+    private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {                                              
         if(jTextFieldUser.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "Campo de usuário vazio!", "Campo vazio", JOptionPane.ERROR_MESSAGE);
         }else if(jPasswordField.getPassword().length <= 0){
             JOptionPane.showMessageDialog(this, "Campo de senha vazio!", "Campo vazio", JOptionPane.ERROR_MESSAGE);
         }else{
-            
+        
         }
-    }//GEN-LAST:event_jButtonCreateActionPerformed
+    }
 
     /**
      * @param args the command line arguments

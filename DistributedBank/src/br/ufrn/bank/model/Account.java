@@ -9,13 +9,15 @@ import java.util.List;
  * @author viniciuscampos
  */
 public class Account {
-	
+
+    private User user;
     private Long id;
     private String password;
     private Double balance;
     private List<Operation> operations;
 
-    public Account(Long id, String password) {
+    public Account(User user, Long id, String password) {
+        this.user = user;
         this.id = id;
         this.password = password;
         this.balance = 0.0;
@@ -47,6 +49,14 @@ public class Account {
         for(Operation o : operations) 
             stmt.add(o.toString() + "\n");
         return stmt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 		
 }

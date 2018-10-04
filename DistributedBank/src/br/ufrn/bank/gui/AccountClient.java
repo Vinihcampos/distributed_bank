@@ -341,7 +341,7 @@ public class AccountClient extends javax.swing.JFrame {
                 m.update(auxPassword.getBytes(),0,auxPassword.length());
                 String password = new BigInteger(1,m.digest()).toString(16);
                 
-                bank.createAccount(Long.valueOf(account), password);
+                bank.createAccount(null, Long.valueOf(account), password);
                 setText("Conta criada com sucesso!", Color.GREEN);
             }catch (AccountAlreadyExistsException ex) {
                 setText("Conta existente!", Color.RED);
