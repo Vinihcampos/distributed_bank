@@ -7,13 +7,21 @@ import java.util.Objects;
 import javax.jws.WebService;
 import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
 import br.ufrn.bank.exceptions.AuthenticationException;
+import br.ufrn.bank.exceptions.AuthenticationFailedException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
+import br.ufrn.bank.exceptions.UserAlreadyExistsException;
 import br.ufrn.bank.model.Account;
 import br.ufrn.bank.model.Deposit;
 import br.ufrn.bank.model.Transfer;
+import br.ufrn.bank.model.User;
 import br.ufrn.bank.model.Withdraw;
 import br.ufrn.bank.soap.interfaces.BankWebI;
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Resource;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 
 /**
  * A remote bank and its operations.
@@ -23,19 +31,60 @@ import br.ufrn.bank.soap.interfaces.BankWebI;
 @WebService(endpointInterface = "br.ufrn.bank.soap.interfaces.BankWebI")
 public class BankImpl implements BankWebI {
 		
+    @Resource
+    private WebServiceContext wsContext;
+    
     private final Map<Long, Account> accounts;
-
+    private final Map<String, User> users;
+    
     public BankImpl() {
-        accounts = new HashMap<>();
+        accounts = new ConcurrentHashMap<>();
+        users = new ConcurrentHashMap<>();
     }
 
     @Override
-    public Long createAccount(Long id, String password) throws AccountAlreadyExistsException {
+    public String createUser(String username, String password) throws UserAlreadyExistsException {
+        
+        if (username == null || password == null) 
+            throw new IllegalArgumentException();
+        
+        if (users.containsKey(username))
+            throw new UserAlreadyExistsException(username);
+        
+        users.put(username, new User(username, password));
+        
+        return username;
+    }
+
+    @Override
+    public String authenticate(String username, String password) throws AuthenticationFailedException {
+
+        if (username == null || password == null)
+            throw new IllegalArgumentException();
+        
+        if (users.containsKey(username)) {
+        
+            User u = users.get(username);
+            
+            if (!u.getPassword().equals(password))
+                throw new AuthenticationFailedException();
+            
+            MessageContext mc = wsContext.getMessageContext();
+            //HttpSession session = ((javax.servlet.http.HttpServletRequest)mc.get(MessageContext.SERVLET_REQUEST)).getSession();
+            
+        } else throw new AuthenticationFailedException();
+
+        return username;
+    }
+
+    
+    @Override
+    public Long createAccount(User user, Long id, String password) throws AccountAlreadyExistsException {
         
         if(accounts.containsKey(id)) 
             throw new AccountAlreadyExistsException(id);
         
-        accounts.put(id, new Account(id, password));			
+        accounts.put(id, new Account(user, id, password));			
         
         return id;
     }

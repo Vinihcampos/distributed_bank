@@ -7,6 +7,7 @@ import br.ufrn.bank.exceptions.NotEnoughBalanceException;
 import br.ufrn.bank.model.Account;
 import br.ufrn.bank.model.Deposit;
 import br.ufrn.bank.model.Transfer;
+import br.ufrn.bank.model.User;
 import br.ufrn.bank.model.Withdraw;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import br.ufrn.bank.rmi.interfaces.IBank;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,18 +30,18 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
     private static final long serialVersionUID = 1L;
 
     private Map<Long, Account> accounts;
-
+    
     public BankImpl() throws RemoteException {
-        accounts = new HashMap<>();
+        accounts = new Hashtable<>();
     }
 
     @Override
-    public Long createAccount(Long id, String password) throws AccountAlreadyExistsException {
+    public Long createAccount(User user, Long id, String password) throws AccountAlreadyExistsException {
         
         if(accounts.containsKey(id)) 
             throw new AccountAlreadyExistsException(id);
         
-        accounts.put(id, new Account(id, password));			
+        accounts.put(id, new Account(user, id, password));			
         
         return id;
     }

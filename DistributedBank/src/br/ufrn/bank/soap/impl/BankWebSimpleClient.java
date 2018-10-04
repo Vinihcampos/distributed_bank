@@ -18,7 +18,7 @@ public class BankWebSimpleClient {
             Service ws = Service.create(url, qname);
             BankWebI bank = ws.getPort(BankWebI.class);
 
-            Long accId = bank.createAccount(10L, "123");
+            Long accId = bank.createAccount(null, 10L, "123");
 
             System.out.println("Created account: " + accId);
 

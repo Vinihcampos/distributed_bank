@@ -7,8 +7,11 @@ package br.ufrn.bank.soap.interfaces;
 
 import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
 import br.ufrn.bank.exceptions.AuthenticationException;
+import br.ufrn.bank.exceptions.AuthenticationFailedException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
+import br.ufrn.bank.exceptions.UserAlreadyExistsException;
+import br.ufrn.bank.model.User;
 import java.util.ArrayList;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -16,12 +19,31 @@ import javax.jws.soap.SOAPBinding;
 import javax.jws.soap.SOAPBinding.Style;
 
 /**
- *
+ * Web interface for the distributed bank.
+ * 
  * @author vitorgreati
  */
 @WebService
 @SOAPBinding(style = Style.RPC)
 public interface BankWebI {
+    
+    /**
+     * Creates a new user.
+     * 
+     * @param username
+     * @param password
+     * @return username of the new user
+     * @throws UserAlreadyExistsException 
+     */
+    @WebMethod
+    public String createUser (String username, String password) throws UserAlreadyExistsException;
+    
+    /**
+     * Authenticates user in the server.
+     * 
+     */
+    @WebMethod 
+    public String authenticate (String username, String password) throws AuthenticationFailedException;
     
     /**
      * Creates an account, given an account number and a password.
@@ -32,7 +54,7 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.AccountAlreadyExistsException 
      */
     @WebMethod
-    public Long createAccount(Long id, String password) throws AccountAlreadyExistsException;
+    public Long createAccount(User user, Long id, String password) throws AccountAlreadyExistsException;
     
     /**
      * Deposit an amount in an account.

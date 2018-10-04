@@ -4,6 +4,7 @@ import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
 import br.ufrn.bank.exceptions.AuthenticationException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
+import br.ufrn.bank.model.User;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface IBank extends Remote {
      * @throws br.ufrn.bank.exceptions.AccountAlreadyExistsException
      * @throws RemoteException 
      */
-    public Long createAccount(Long id, String password) throws AccountAlreadyExistsException, RemoteException;
+    public Long createAccount(User user, Long id, String password) throws AccountAlreadyExistsException, RemoteException;
     
     /**
      * Deposit an amount in an account.

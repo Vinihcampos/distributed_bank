@@ -45,15 +45,15 @@ public class BankTests {
     
     @Test
     public void createAccountTest() throws RemoteException, AccountAlreadyExistsException, InvalidAccountException, AuthenticationException {
-        bank.createAccount(123L, "123456789");
+        bank.createAccount(null, 123L, "123456789");
         assertEquals(new ArrayList<>(), bank.statement(123L, "123456789"));
     }
     
     @Test
     public void sameNumberAccountTest() {
         try {
-            bank.createAccount(1234L, "123456789");
-            bank.createAccount(1234L, "123456789");
+            bank.createAccount(null, 1234L, "123456789");
+            bank.createAccount(null, 1234L, "123456789");
             fail("Accounts with the same name");
         } catch (RemoteException | AccountAlreadyExistsException ex) {
             //Logger.getLogger(BankTests.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,7 +62,7 @@ public class BankTests {
     
     @Test
     public void depositTest() throws RemoteException, AccountAlreadyExistsException, InvalidAccountException, AuthenticationException {
-        bank.createAccount(12345L, "123456789");
+        bank.createAccount(null, 12345L, "123456789");
         assertEquals(new Double(0.0), bank.getBalance(12345L, "123456789"));
         bank.deposit(100.0, 12345L, true);
         assertEquals(new Double(100.0), bank.getBalance(12345L, "123456789"));
@@ -74,7 +74,7 @@ public class BankTests {
     
     @Test
     public void withdrawTest() throws RemoteException, AccountAlreadyExistsException, IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
-        bank.createAccount(123456L, "123456789");
+        bank.createAccount(null, 123456L, "123456789");
         bank.deposit(1000.0, 123456L, true);
         bank.withdraw(123456L, "123456789", 200.0, true);
         assertEquals(new Double(800.0), bank.getBalance(123456L, "123456789"));
@@ -102,8 +102,8 @@ public class BankTests {
     
     @Test
     public void transferTest() throws RemoteException, AccountAlreadyExistsException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
-        Long acc1 = bank.createAccount(2L, "123");
-        Long acc2 = bank.createAccount(1L, "123");
+        Long acc1 = bank.createAccount(null, 2L, "123");
+        Long acc2 = bank.createAccount(null, 1L, "123");
         assertEquals(new Double(0.0), bank.getBalance(acc1, "123"));
         assertEquals(new Double(0.0), bank.getBalance(acc2, "123"));
         bank.deposit(300.0, acc1, true);
@@ -119,8 +119,8 @@ public class BankTests {
         
         try {
             
-            acc1 = bank.createAccount(3L, "123");
-            acc2 = bank.createAccount(4L, "123");
+            acc1 = bank.createAccount(null, 3L, "123");
+            acc2 = bank.createAccount(null, 4L, "123");
             
             bank.deposit(1000.0, acc1, true);
             
