@@ -1,5 +1,6 @@
 package br.ufrn.bank.soap.interfaces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -88,7 +89,7 @@ public interface IBankWeb {
      * @throws RemoteException 
      */
 	@WebMethod
-    public List<String> statement(Long account, String password) throws InvalidAccountException, AuthenticationException;
+    public ArrayList<String> statement(Long account, String password) throws InvalidAccountException, AuthenticationException;
     
     /**
      * Check account balance.

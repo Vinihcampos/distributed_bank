@@ -5,7 +5,6 @@
  */
 package br.ufrn.bank.exceptions;
 
-import java.rmi.RemoteException;
 
 /**
  * Thrown when an account number already exists.
