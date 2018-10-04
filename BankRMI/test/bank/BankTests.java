@@ -5,11 +5,11 @@
  */
 package bank;
 
-import exceptions.AccountAlreadyExistsException;
-import exceptions.AuthenticationException;
-import exceptions.InvalidAccountException;
-import exceptions.NotEnoughBalanceException;
-import interfaces.IBank;
+import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
+import br.ufrn.bank.exceptions.AuthenticationException;
+import br.ufrn.bank.exceptions.InvalidAccountException;
+import br.ufrn.bank.exceptions.NotEnoughBalanceException;
+import br.ufrn.bank.rmi.interfaces.IBank;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -22,12 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
-import server.Account;
-import server.Bank;
-import server.Deposit;
-import server.Operation;
-import server.Transfer;
-import server.Withdraw;
+import br.ufrn.bank.model.Account;
+import br.ufrn.bank.rmi.impl.BankImpl;
+import br.ufrn.bank.model.Deposit;
+import br.ufrn.bank.model.Operation;
+import br.ufrn.bank.model.Transfer;
+import br.ufrn.bank.model.Withdraw;
 
 
 /**
