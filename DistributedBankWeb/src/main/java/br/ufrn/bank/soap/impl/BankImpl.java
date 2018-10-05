@@ -61,6 +61,22 @@ public class BankImpl implements BankWebI {
         }
     }
     
+    private void signOut() throws MissingAuthenticationException {
+        MessageContext mc = wsContext.getMessageContext();
+        HttpSession session = ((HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST)).getSession();
+        
+        if (session == null) {
+            throw new WebServiceException("Missing HTTP session");
+        } else {
+            if (session.getAttribute("authenticatedUser") == null) {
+                session.setAttribute("authenticatedUser", null);
+                session.invalidate();
+            } else {
+                throw new MissingAuthenticationException();
+            }
+        }
+    }
+    
     private boolean isAuthenticated() {
         return getAuthenticatedUser() != null;
     }
