@@ -1,7 +1,7 @@
 package br.ufrn.bank.rmi.impl;
 
 import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
-import br.ufrn.bank.exceptions.AuthenticationException;
+import br.ufrn.bank.exceptions.AccountAuthenticationException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
 import br.ufrn.bank.model.Account;
@@ -63,7 +63,7 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
     }
 
     @Override
-    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
+    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException {
                    
         if(value <= 0)
             throw new IllegalArgumentException("O saque requer valores positivos!");
@@ -72,7 +72,7 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
             throw new InvalidAccountException(account);
             
         if(!accounts.get(account).getPassword().equals(password)) 
-            throw new AuthenticationException();
+            throw new AccountAuthenticationException();
 
         if(accounts.get(account).getBalance() < value)
             throw new NotEnoughBalanceException(account);
@@ -85,7 +85,7 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
     }
 
     @Override
-    public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException {
+    public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException {
         
         if(Objects.equals(account, anotherAccount)){
             throw new IllegalArgumentException("As contas precisam ser distintas!");
@@ -103,25 +103,25 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
     }
 
     @Override
-    public List<String> statement(Long account, String password) throws InvalidAccountException, AuthenticationException {
+    public List<String> statement(Long account, String password) throws InvalidAccountException, AccountAuthenticationException {
         
         if (!accounts.containsKey(account))
             throw new InvalidAccountException(account);
         
         if (!accounts.get(account).getPassword().equals(password))
-            throw new AuthenticationException();
+            throw new AccountAuthenticationException();
         
         return accounts.get(account).getStatement();
     }
 
     @Override
-    public Double getBalance(Long account, String password) throws InvalidAccountException, AuthenticationException {
+    public Double getBalance(Long account, String password) throws InvalidAccountException, AccountAuthenticationException {
         
         if (!accounts.containsKey(account))
             throw new InvalidAccountException(account);
         
         if (!accounts.get(account).getPassword().equals(password))
-            throw new AuthenticationException();
+            throw new AccountAuthenticationException();
         
         return accounts.get(account).getBalance();
     }

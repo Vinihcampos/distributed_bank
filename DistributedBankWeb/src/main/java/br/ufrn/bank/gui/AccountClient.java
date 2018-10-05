@@ -6,7 +6,7 @@
 package br.ufrn.bank.gui;
 
 import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
-import br.ufrn.bank.exceptions.AuthenticationException;
+import br.ufrn.bank.exceptions.AccountAuthenticationException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
 import br.ufrn.bank.rmi.interfaces.IBank;
@@ -321,7 +321,7 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Saque inválido, informe um valor positivo!", Color.RED);
             }catch(InvalidAccountException ex){
                 setText("Conta inexistente!", Color.RED);
-            }catch(AuthenticationException ex){
+            }catch(AccountAuthenticationException ex){
                 setText("Senha inválida!", Color.RED);
             }catch(NotEnoughBalanceException ex){
                 setText("Saldo insuficiente!", Color.RED);
@@ -395,7 +395,7 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Saldo atual: R$ " + String.valueOf(balance), Color.GREEN);
             } catch(InvalidAccountException ex){
                 setText("Conta inexistente!", Color.RED);
-            } catch(AuthenticationException ex){
+            } catch(AccountAuthenticationException ex){
                 setText("Senha inválida!", Color.RED);
             } catch (NoSuchAlgorithmException | RemoteException ex) {
                 setText("Não foi possível consultar o saldo!", Color.RED);
@@ -424,7 +424,7 @@ public class AccountClient extends javax.swing.JFrame {
                 setText(ex.getMessage(), Color.RED);
             }catch(InvalidAccountException ex){
                 setText("Conta inexistente!", Color.RED);
-            }catch(AuthenticationException ex){
+            }catch(AccountAuthenticationException ex){
                 setText("Senha inválida!", Color.RED);
             }catch(NotEnoughBalanceException ex){
                 setText("Saldo insuficiente!", Color.RED);
@@ -462,7 +462,7 @@ public class AccountClient extends javax.swing.JFrame {
                 
             }catch(InvalidAccountException ex){
                 setText("Conta inexistente!", Color.RED);
-            }catch(AuthenticationException ex){
+            }catch(AccountAuthenticationException ex){
                 setText("Senha inválida!", Color.RED);
             }catch (NoSuchAlgorithmException | RemoteException ex) {
                 setText("Não foi possível consultar o extrato!", Color.RED);

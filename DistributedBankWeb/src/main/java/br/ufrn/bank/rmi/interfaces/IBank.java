@@ -1,7 +1,7 @@
 package br.ufrn.bank.rmi.interfaces;
 
 import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
-import br.ufrn.bank.exceptions.AuthenticationException;
+import br.ufrn.bank.exceptions.AccountAuthenticationException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
 import br.ufrn.bank.model.User;
@@ -49,11 +49,11 @@ public interface IBank extends Remote {
      * @param value
      * @param updateOperation
      * @throws br.ufrn.bank.exceptions.InvalidAccountException
-     * @throws br.ufrn.bank.exceptions.AuthenticationException
+     * @throws br.ufrn.bank.exceptions.AccountAuthenticationException
      * @throws RemoteException 
      * @throws br.ufrn.bank.exceptions.NotEnoughBalanceException 
      */
-    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
+    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, RemoteException;
     
     /**
      * Transfers an amount from an account to another.
@@ -64,10 +64,10 @@ public interface IBank extends Remote {
      * @param anotherAccount
      * @throws RemoteException 
      * @throws br.ufrn.bank.exceptions.InvalidAccountException 
-     * @throws br.ufrn.bank.exceptions.AuthenticationException 
+     * @throws br.ufrn.bank.exceptions.AccountAuthenticationException 
      * @throws br.ufrn.bank.exceptions.NotEnoughBalanceException 
      */
-    public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AuthenticationException, NotEnoughBalanceException, RemoteException;
+    public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, RemoteException;
     
     /**
      * Returns an account statement (operations performed).
@@ -76,10 +76,10 @@ public interface IBank extends Remote {
      * @param password
      * @return the account statement
      * @throws br.ufrn.bank.exceptions.InvalidAccountException
-     * @throws br.ufrn.bank.exceptions.AuthenticationException
+     * @throws br.ufrn.bank.exceptions.AccountAuthenticationException
      * @throws RemoteException 
      */
-    public List<String> statement(Long account, String password) throws InvalidAccountException, AuthenticationException, RemoteException;
+    public List<String> statement(Long account, String password) throws InvalidAccountException, AccountAuthenticationException, RemoteException;
     
     /**
      * Check account balance.
@@ -88,8 +88,8 @@ public interface IBank extends Remote {
      * @param password
      * @return the balance
      * @throws br.ufrn.bank.exceptions.InvalidAccountException
-     * @throws br.ufrn.bank.exceptions.AuthenticationException
+     * @throws br.ufrn.bank.exceptions.AccountAuthenticationException
      * @throws java.rmi.RemoteException
      */
-    public Double getBalance(Long account, String password) throws InvalidAccountException, AuthenticationException, RemoteException;
+    public Double getBalance(Long account, String password) throws InvalidAccountException, AccountAuthenticationException, RemoteException;
 }

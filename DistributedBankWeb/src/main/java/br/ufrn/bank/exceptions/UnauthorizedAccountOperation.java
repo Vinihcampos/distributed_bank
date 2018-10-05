@@ -6,14 +6,15 @@
 package br.ufrn.bank.exceptions;
 
 /**
- * Thrown when the authentication fails.
+ * Thrown when a user already exists and an
+ * attempt to create it is made.
  * 
  * @author vitorgreati
  */
-public class AuthenticationException extends Exception {
+public class UnauthorizedAccountOperation extends Exception {
     
-    public AuthenticationException() {
-        super("Invalid account/password");
+    public UnauthorizedAccountOperation() {
+        super("Unauthorized account operation");
     }
     
 }
