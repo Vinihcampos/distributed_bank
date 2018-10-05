@@ -5,6 +5,13 @@
  */
 package br.ufrn.bank.gui;
 
+import br.ufrn.bank.soap.impl.BankSingleton;
+import br.ufrn.bank.exceptions.AuthenticationFailedException;
+import br.ufrn.bank.exceptions.InconvenientUserException;
+import br.ufrn.bank.exceptions.InvalidArgumentException;
+import br.ufrn.bank.exceptions.UserAlreadyExistsException;
+import br.ufrn.bank.soap.interfaces.BankWebI;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,12 +19,25 @@ import javax.swing.JOptionPane;
  * @author vinihcampos
  */
 public class BankClient extends javax.swing.JFrame {
-
+    
+    private BankWebI bank;
+    
     /**
      * Creates new form BankClient
      */
-    public BankClient() {
+    public BankClient() {        
         initComponents();
+        try {
+            bank = BankSingleton.getInstance();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao conectar-se com o banco", "Erro de conexão", JOptionPane.ERROR_MESSAGE);
+            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        }
+    }
+    
+    private void clearInputs(){
+        jTextFieldUser.setText("");
+        jPasswordField.setText("");
     }
 
     /**
@@ -54,6 +74,11 @@ public class BankClient extends javax.swing.JFrame {
 
         jButtonLogin.setText("Entrar");
         jButtonLogin.setPreferredSize(new java.awt.Dimension(133, 25));
+        jButtonLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -114,13 +139,39 @@ public class BankClient extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
+        if(jTextFieldUser.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Campo de usuário vazio!", "Campo vazio", JOptionPane.ERROR_MESSAGE);
+        }else if(jPasswordField.getPassword().length <= 0){
+            JOptionPane.showMessageDialog(this, "Campo de senha vazio!", "Campo vazio", JOptionPane.ERROR_MESSAGE);
+        }else{
+            try {
+                bank.authenticate(jTextFieldUser.getText(), String.valueOf(jPasswordField.getPassword()));
+                new AccountClient(bank).setVisible(true);
+                this.dispose();
+            } catch (AuthenticationFailedException ex) {
+                JOptionPane.showMessageDialog(this, "Falha de autenticação", "Autenticação", JOptionPane.ERROR_MESSAGE);
+            } catch (InvalidArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "Campos inválidos", "Autenticação", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jButtonLoginActionPerformed
+
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {                                              
         if(jTextFieldUser.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "Campo de usuário vazio!", "Campo vazio", JOptionPane.ERROR_MESSAGE);
         }else if(jPasswordField.getPassword().length <= 0){
             JOptionPane.showMessageDialog(this, "Campo de senha vazio!", "Campo vazio", JOptionPane.ERROR_MESSAGE);
         }else{
-        
+            try {
+                bank.createUser(jTextFieldUser.getText(), String.valueOf(jPasswordField.getPassword()));
+                clearInputs();
+                JOptionPane.showMessageDialog(this, "Usuário criado com sucesso!", "Criação de usuário", JOptionPane.INFORMATION_MESSAGE);
+            } catch (UserAlreadyExistsException | InconvenientUserException ex) {
+                JOptionPane.showMessageDialog(this, "Usuário existente", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
+            } catch (InvalidArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "Campos inválidos", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
+            } 
         }
     }
 

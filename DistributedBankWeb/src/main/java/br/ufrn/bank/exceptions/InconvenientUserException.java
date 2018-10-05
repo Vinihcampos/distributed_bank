@@ -13,7 +13,7 @@ package br.ufrn.bank.exceptions;
  */
 public class InconvenientUserException extends Exception {
     
-    public InconvenientUserException() {
+    public InconvenientUserException(String stub) {
         super("No used should be signed in for this operation");
     }
     

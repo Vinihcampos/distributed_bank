@@ -11,6 +11,7 @@ import javax.xml.ws.Service;
 import br.ufrn.bank.exceptions.AuthenticationFailedException;
 import br.ufrn.bank.exceptions.InconvenientUserException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
+import br.ufrn.bank.exceptions.InvalidArgumentException;
 import br.ufrn.bank.exceptions.MissingAuthenticationException;
 import br.ufrn.bank.exceptions.UserAlreadyExistsException;
 import br.ufrn.bank.soap.interfaces.BankWebI;
@@ -18,7 +19,7 @@ import javax.xml.ws.BindingProvider;
 
 public class BankWebSimpleClient {
 
-    public static void main(String[] args) throws UserAlreadyExistsException, AuthenticationFailedException, InconvenientUserException, AccountAlreadyExistsException, MissingAuthenticationException, InvalidAccountException, AccountAuthenticationException {
+    public static void main(String[] args) throws UserAlreadyExistsException, AuthenticationFailedException, InconvenientUserException, AccountAlreadyExistsException, MissingAuthenticationException, InvalidAccountException, AccountAuthenticationException, InvalidArgumentException {
         try {
             URL url = new URL("http://localhost:8080/DistributedBankWeb/BankImplService?wsdl");
             QName qname = new QName("http://impl.soap.bank.ufrn.br/", "BankImplService");

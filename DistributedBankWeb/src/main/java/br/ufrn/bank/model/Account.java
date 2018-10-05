@@ -49,6 +49,7 @@ public class Account {
         ArrayList<String> stmt = new ArrayList<>();
         for(Operation o : operations) 
             stmt.add(o.toString() + "\n");
+        
         return stmt;
     }
 

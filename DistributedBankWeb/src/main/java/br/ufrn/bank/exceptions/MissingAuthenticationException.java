@@ -13,7 +13,7 @@ package br.ufrn.bank.exceptions;
  */
 public class MissingAuthenticationException extends Exception {
     
-    public MissingAuthenticationException() {
+    public MissingAuthenticationException(String stub) {
         super("Missing authentication");
     }
     

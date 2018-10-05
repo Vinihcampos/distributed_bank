@@ -12,7 +12,7 @@ package br.ufrn.bank.exceptions;
  */
 public class AccountAuthenticationException extends Exception {
     
-    public AccountAuthenticationException() {
+    public AccountAuthenticationException(String stub) {
         super("Invalid account/password");
     }
     

@@ -5,11 +5,15 @@
  */
 package br.ufrn.bank.gui;
 
+import br.ufrn.bank.soap.impl.BankSingleton;
 import br.ufrn.bank.exceptions.AccountAlreadyExistsException;
 import br.ufrn.bank.exceptions.AccountAuthenticationException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
+import br.ufrn.bank.exceptions.InvalidArgumentException;
+import br.ufrn.bank.exceptions.MissingAuthenticationException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
 import br.ufrn.bank.rmi.interfaces.IBank;
+import br.ufrn.bank.soap.interfaces.BankWebI;
 import java.awt.Color;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -18,9 +22,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -32,18 +38,22 @@ import javax.swing.text.StyleContext;
  */
 public class AccountClient extends javax.swing.JFrame {
     
-    IBank bank;
+    private BankWebI bank;
     final String NUMBERS = "0123456789";
     
     /**
      * Creates new form BankClient
-     * @throws java.rmi.NotBoundException
-     * @throws java.net.MalformedURLException
-     * @throws java.rmi.RemoteException
      */
-    public AccountClient() throws NotBoundException, MalformedURLException, RemoteException {
-        bank = (IBank) Naming.lookup("rmi://localhost/Bank");
+    public AccountClient(BankWebI bank){        
         initComponents();
+        this.bank = bank;
+    }
+    
+    private void renewConnection(){
+        JOptionPane.showMessageDialog(this, "Falha de comunicação com o servidor, autentique-se novamente!", "Falha de comunicação", JOptionPane.ERROR_MESSAGE);
+        BankSingleton.renewInstance();
+        new BankClient().setVisible(true);
+        this.dispose();
     }
     
     public void setText(String s, Color c) {
@@ -317,16 +327,18 @@ public class AccountClient extends javax.swing.JFrame {
                 
                 bank.withdraw(account, password, value, true);
                 setText("Saque realizado com sucesso!", Color.GREEN);
-            }catch (IllegalArgumentException ex) {
+            }catch (InvalidArgumentException ex) {
                 setText("Saque inválido, informe um valor positivo!", Color.RED);
-            }catch(InvalidAccountException ex){
+            }catch(InvalidAccountException ex){ 
                 setText("Conta inexistente!", Color.RED);
             }catch(AccountAuthenticationException ex){
                 setText("Senha inválida!", Color.RED);
             }catch(NotEnoughBalanceException ex){
                 setText("Saldo insuficiente!", Color.RED);
-            }catch (NoSuchAlgorithmException | RemoteException ex) {
+            }catch (NoSuchAlgorithmException ex) {
                 setText("Não foi possível realizar o saque!", Color.RED);
+            } catch (MissingAuthenticationException ex) {
+                renewConnection();
             }
         }
     }//GEN-LAST:event_jButtonWithdrawActionPerformed
@@ -340,12 +352,16 @@ public class AccountClient extends javax.swing.JFrame {
                 m.update(auxPassword.getBytes(),0,auxPassword.length());
                 String password = new BigInteger(1,m.digest()).toString(16);
                 
-                bank.createAccount(null, Long.valueOf(account), password);
+                bank.createAccount(Long.valueOf(account), password);
                 setText("Conta criada com sucesso!", Color.GREEN);
             }catch (AccountAlreadyExistsException ex) {
                 setText("Conta existente!", Color.RED);
-            }catch (NoSuchAlgorithmException | RemoteException ex) {
+            }catch (NoSuchAlgorithmException ex) {
                 setText("Não foi possível criar conta!", Color.RED);
+            } catch (MissingAuthenticationException ex) {
+                renewConnection();
+            } catch (InvalidArgumentException ex) {
+                setText("valores de conta inválidos", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonCreateAccountActionPerformed
@@ -358,12 +374,12 @@ public class AccountClient extends javax.swing.JFrame {
                 bank.deposit(value, account,true);
                 
                 setText("Depósito realizado com sucesso!", Color.GREEN);
-            }catch (IllegalArgumentException ex) {
+            }catch (InvalidArgumentException ex) {
                 setText("Depósito inválido, informe um valor positivo!", Color.RED);
             }catch(InvalidAccountException ex){
                 setText("Conta inexistente!", Color.RED);
-            }catch (RemoteException ex) {
-                setText("Não foi possível realizar o saque!", Color.RED);
+            } catch (MissingAuthenticationException ex) {
+                renewConnection();
             }
         }
     }//GEN-LAST:event_jButtonDepositActionPerformed
@@ -397,8 +413,12 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Conta inexistente!", Color.RED);
             } catch(AccountAuthenticationException ex){
                 setText("Senha inválida!", Color.RED);
-            } catch (NoSuchAlgorithmException | RemoteException ex) {
+            } catch (NoSuchAlgorithmException ex) {
                 setText("Não foi possível consultar o saldo!", Color.RED);
+            } catch (MissingAuthenticationException ex) {
+                renewConnection();
+            } catch (InvalidArgumentException ex) {
+                setText("valores inválidos", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonBalanceActionPerformed
@@ -420,7 +440,7 @@ public class AccountClient extends javax.swing.JFrame {
                 
                 bank.transfer(account, password, value, anotherAccount);
                 setText("Transferência realizada com sucesso!", Color.GREEN);
-            }catch (IllegalArgumentException ex) {
+            }catch (InvalidArgumentException ex) {
                 setText(ex.getMessage(), Color.RED);
             }catch(InvalidAccountException ex){
                 setText("Conta inexistente!", Color.RED);
@@ -428,8 +448,10 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Senha inválida!", Color.RED);
             }catch(NotEnoughBalanceException ex){
                 setText("Saldo insuficiente!", Color.RED);
-            }catch (NoSuchAlgorithmException | RemoteException ex) {
+            }catch (NoSuchAlgorithmException ex) {
                 setText("Não foi possível realizar a transferência!", Color.RED);
+            } catch (MissingAuthenticationException ex) {
+                renewConnection();
             }            
         }
     }//GEN-LAST:event_jButtonTransferActionPerformed
@@ -443,7 +465,7 @@ public class AccountClient extends javax.swing.JFrame {
                 m.update(auxPassword.getBytes(),0,auxPassword.length());
                 String password = new BigInteger(1,m.digest()).toString(16);
                 
-                List<String> result = bank.statement(account, password);
+                String[] result = bank.statement(account, password);
                 setText("Extrato: \n", Color.BLACK);
                 
                 for(String r : result){
@@ -464,8 +486,12 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Conta inexistente!", Color.RED);
             }catch(AccountAuthenticationException ex){
                 setText("Senha inválida!", Color.RED);
-            }catch (NoSuchAlgorithmException | RemoteException ex) {
+            }catch (NoSuchAlgorithmException ex) {
                 setText("Não foi possível consultar o extrato!", Color.RED);
+            } catch (MissingAuthenticationException ex) {
+                renewConnection();
+            } catch (InvalidArgumentException ex) {
+                setText("valores inválidos", Color.RED);
             } 
         }
     }//GEN-LAST:event_jButtonStatementActionPerformed
@@ -503,8 +529,8 @@ public class AccountClient extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    new AccountClient().setVisible(true);
-                } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+                    new AccountClient(BankSingleton.getInstance()).setVisible(true);
+                } catch (Exception ex) {
                     Logger.getLogger(AccountClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

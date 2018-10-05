@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
  */
 public class NotEnoughBalanceException extends Exception {
     
-    public NotEnoughBalanceException(Long msg) {
+    public NotEnoughBalanceException(String msg) {
         super("Balance is too low for this operation in account " + msg);
     }
     

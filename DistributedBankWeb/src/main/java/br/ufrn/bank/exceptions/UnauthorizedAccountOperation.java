@@ -13,7 +13,7 @@ package br.ufrn.bank.exceptions;
  */
 public class UnauthorizedAccountOperation extends Exception {
     
-    public UnauthorizedAccountOperation() {
+    public UnauthorizedAccountOperation(String stub) {
         super("Unauthorized account operation");
     }
     

@@ -39,7 +39,7 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
     public Long createAccount(User user, Long id, String password) throws AccountAlreadyExistsException {
         
         if(accounts.containsKey(id)) 
-            throw new AccountAlreadyExistsException(id);
+            throw new AccountAlreadyExistsException(String.valueOf(id));
         
         accounts.put(id, new Account(user, id, password));			
         
@@ -53,7 +53,7 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
             throw new IllegalArgumentException("Valor do depósito precisa ser positivo!");
         
         if(!accounts.containsKey(account)) 
-            throw new InvalidAccountException(account);
+            throw new InvalidAccountException(String.valueOf(account));
         
         accounts.get(account).updateBalance(value);
         
@@ -69,13 +69,13 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
             throw new IllegalArgumentException("O saque requer valores positivos!");
         
         if(!accounts.containsKey(account))
-            throw new InvalidAccountException(account);
+            throw new InvalidAccountException(String.valueOf(account));
             
         if(!accounts.get(account).getPassword().equals(password)) 
-            throw new AccountAuthenticationException();
+            throw new AccountAuthenticationException("");
 
         if(accounts.get(account).getBalance() < value)
-            throw new NotEnoughBalanceException(account);
+            throw new NotEnoughBalanceException(String.valueOf(account));
         
         accounts.get(account).updateBalance(-value);
         
@@ -92,7 +92,7 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
         }
     
         if(!accounts.containsKey(anotherAccount))
-            throw new InvalidAccountException(anotherAccount);
+            throw new InvalidAccountException(String.valueOf(anotherAccount));
         
         withdraw(account, password, value, false);        
         deposit(value, anotherAccount, false);
@@ -106,10 +106,10 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
     public List<String> statement(Long account, String password) throws InvalidAccountException, AccountAuthenticationException {
         
         if (!accounts.containsKey(account))
-            throw new InvalidAccountException(account);
+            throw new InvalidAccountException(String.valueOf(account));
         
         if (!accounts.get(account).getPassword().equals(password))
-            throw new AccountAuthenticationException();
+            throw new AccountAuthenticationException("");
         
         return accounts.get(account).getStatement();
     }
@@ -118,10 +118,10 @@ public class BankImpl extends UnicastRemoteObject implements IBank, Serializable
     public Double getBalance(Long account, String password) throws InvalidAccountException, AccountAuthenticationException {
         
         if (!accounts.containsKey(account))
-            throw new InvalidAccountException(account);
+            throw new InvalidAccountException(String.valueOf(account));
         
         if (!accounts.get(account).getPassword().equals(password))
-            throw new AccountAuthenticationException();
+            throw new AccountAuthenticationException("");
         
         return accounts.get(account).getBalance();
     }

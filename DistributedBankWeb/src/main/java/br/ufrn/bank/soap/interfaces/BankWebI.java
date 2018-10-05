@@ -10,11 +10,13 @@ import br.ufrn.bank.exceptions.AccountAuthenticationException;
 import br.ufrn.bank.exceptions.AuthenticationFailedException;
 import br.ufrn.bank.exceptions.InconvenientUserException;
 import br.ufrn.bank.exceptions.InvalidAccountException;
+import br.ufrn.bank.exceptions.InvalidArgumentException;
 import br.ufrn.bank.exceptions.MissingAuthenticationException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
 import br.ufrn.bank.exceptions.UserAlreadyExistsException;
 import br.ufrn.bank.model.User;
 import java.util.ArrayList;
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -39,7 +41,7 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.InconvenientUserException 
      */
     @WebMethod
-    public String createUser (String username, String password) throws UserAlreadyExistsException, InconvenientUserException;
+    public String createUser (String username, String password) throws InvalidArgumentException, UserAlreadyExistsException, InconvenientUserException;
     
     /**
      * Authenticates user in the server.
@@ -50,7 +52,7 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.AuthenticationFailedException
      */
     @WebMethod 
-    public String authenticate (String username, String password) throws AuthenticationFailedException;
+    public String authenticate (String username, String password) throws InvalidArgumentException, AuthenticationFailedException;
     
     /**
      * Invalidates a session, user sign out.
@@ -58,7 +60,7 @@ public interface BankWebI {
      * @throws MissingAuthenticationException 
      */
     @WebMethod
-    public void signOut() throws MissingAuthenticationException;
+    public void signOut() throws InvalidArgumentException, MissingAuthenticationException;
     
     /**
      * Creates an account, given an account number and a password.
@@ -70,7 +72,7 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.MissingAuthenticationException 
      */
     @WebMethod
-    public Long createAccount(Long id, String password) throws AccountAlreadyExistsException, MissingAuthenticationException;
+    public Long createAccount(Long id, String password) throws InvalidArgumentException, AccountAlreadyExistsException, MissingAuthenticationException;
     
     /**
      * Deposit an amount in an account.
@@ -82,7 +84,7 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.MissingAuthenticationException
      */
     @WebMethod
-    public void deposit(Double value, Long account, Boolean updateOperation) throws IllegalArgumentException, InvalidAccountException, MissingAuthenticationException;
+    public void deposit(Double value, Long account, Boolean updateOperation) throws InvalidArgumentException, InvalidAccountException, MissingAuthenticationException;
     
     /**
      * Withdraw a value from an account.
@@ -100,7 +102,7 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.MissingAuthenticationException
      */
     @WebMethod
-    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException;
+    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException;
     
     /**
      * Transfers an amount from an account to another.
@@ -115,7 +117,7 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.MissingAuthenticationException
      */
     @WebMethod
-    public void transfer(Long account, String password, Double value, Long anotherAccount) throws IllegalArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException;
+    public void transfer(Long account, String password, Double value, Long anotherAccount) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException;
     
     /**
      * Returns an account statement (operations performed).
@@ -127,8 +129,8 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.AccountAuthenticationException
      * @throws br.ufrn.bank.exceptions.MissingAuthenticationException
      */
-    @WebMethod
-    public ArrayList<String> statement(Long account, String password) throws InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException;
+    @WebMethod()
+    public String[] statement(Long account, String password) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException;
     
     /**
      * Check account balance.
@@ -141,6 +143,6 @@ public interface BankWebI {
      * @throws br.ufrn.bank.exceptions.MissingAuthenticationException
      */
     @WebMethod
-    public Double getBalance(Long account, String password) throws InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException;
+    public Double getBalance(Long account, String password) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException;
 }
 

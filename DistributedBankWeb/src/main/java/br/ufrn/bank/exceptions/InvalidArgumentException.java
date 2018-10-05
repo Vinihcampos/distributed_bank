@@ -6,12 +6,14 @@
 package br.ufrn.bank.exceptions;
 
 /**
- * Thrown when authentication fails.
+ * Thrown when an account number already exists.
  * 
  * @author vitorgreati
  */
-public class AuthenticationFailedException extends Exception {
-    public AuthenticationFailedException(String stub){
-        super("Invalid username and/or password");
+public class InvalidArgumentException extends Exception {
+    
+    public InvalidArgumentException(String msg) {
+        super(msg);
     }
+        
 }
