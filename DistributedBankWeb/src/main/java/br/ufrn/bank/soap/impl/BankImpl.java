@@ -1,7 +1,6 @@
 package br.ufrn.bank.soap.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import javax.jws.WebService;
@@ -19,7 +18,6 @@ import br.ufrn.bank.model.Transfer;
 import br.ufrn.bank.model.User;
 import br.ufrn.bank.model.Withdraw;
 import br.ufrn.bank.soap.interfaces.BankWebI;
-import java.util.Hashtable;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +59,8 @@ public class BankImpl implements BankWebI {
         }
     }
     
-    private void signOut() throws MissingAuthenticationException {
+    @Override
+    public void signOut() throws MissingAuthenticationException {
         MessageContext mc = wsContext.getMessageContext();
         HttpSession session = ((HttpServletRequest) mc.get(MessageContext.SERVLET_REQUEST)).getSession();
         

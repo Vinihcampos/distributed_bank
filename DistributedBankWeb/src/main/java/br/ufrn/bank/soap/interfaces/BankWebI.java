@@ -53,6 +53,14 @@ public interface BankWebI {
     public String authenticate (String username, String password) throws AuthenticationFailedException;
     
     /**
+     * Invalidates a session, user sign out.
+     * 
+     * @throws MissingAuthenticationException 
+     */
+    @WebMethod
+    public void signOut() throws MissingAuthenticationException;
+    
+    /**
      * Creates an account, given an account number and a password.
      * 
      * @param id

@@ -1,6 +1,7 @@
 package br.ufrn.bank.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class Account {
         this.id = id;
         this.password = password;
         this.balance = 0.0;
-        this.operations = new ArrayList<>();
+        this.operations = Collections.synchronizedList(new ArrayList<>());
     }
 
     public Long getId() {
