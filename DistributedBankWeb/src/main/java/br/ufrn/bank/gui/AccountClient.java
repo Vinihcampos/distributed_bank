@@ -14,7 +14,9 @@ import br.ufrn.bank.exceptions.MissingAuthenticationException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
 import br.ufrn.bank.rmi.interfaces.IBank;
 import br.ufrn.bank.soap.interfaces.BankWebI;
+import com.sun.xml.ws.client.ClientTransportException;
 import java.awt.Color;
+import java.awt.event.WindowEvent;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -47,6 +49,12 @@ public class AccountClient extends javax.swing.JFrame {
     public AccountClient(BankWebI bank){        
         initComponents();
         this.bank = bank;
+    }
+    
+    public AccountClient(){
+        initComponents();
+        JOptionPane.showMessageDialog(this, "Operação não permitida", "Falha de comunicação", JOptionPane.ERROR_MESSAGE);
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
     
     private void renewConnection(){
@@ -339,6 +347,8 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Não foi possível realizar o saque!", Color.RED);
             } catch (MissingAuthenticationException ex) {
                 renewConnection();
+            } catch (ClientTransportException ex) {
+                setText("Falha de comunicação com o servidor!", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonWithdrawActionPerformed
@@ -362,6 +372,8 @@ public class AccountClient extends javax.swing.JFrame {
                 renewConnection();
             } catch (InvalidArgumentException ex) {
                 setText("valores de conta inválidos", Color.RED);
+            } catch (ClientTransportException ex) {
+                setText("Falha de comunicação com o servidor!", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonCreateAccountActionPerformed
@@ -380,6 +392,8 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Conta inexistente!", Color.RED);
             } catch (MissingAuthenticationException ex) {
                 renewConnection();
+            } catch (ClientTransportException ex) {
+                setText("Falha de comunicação com o servidor!", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonDepositActionPerformed
@@ -419,6 +433,8 @@ public class AccountClient extends javax.swing.JFrame {
                 renewConnection();
             } catch (InvalidArgumentException ex) {
                 setText("valores inválidos", Color.RED);
+            } catch (ClientTransportException ex) {
+                setText("Falha de comunicação com o servidor!", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonBalanceActionPerformed
@@ -452,7 +468,9 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("Não foi possível realizar a transferência!", Color.RED);
             } catch (MissingAuthenticationException ex) {
                 renewConnection();
-            }            
+            } catch (ClientTransportException ex) {
+                setText("Falha de comunicação com o servidor!", Color.RED);
+            }     
         }
     }//GEN-LAST:event_jButtonTransferActionPerformed
 
@@ -492,7 +510,9 @@ public class AccountClient extends javax.swing.JFrame {
                 renewConnection();
             } catch (InvalidArgumentException ex) {
                 setText("valores inválidos", Color.RED);
-            } 
+            } catch (ClientTransportException ex) {
+                setText("Falha de comunicação com o servidor!", Color.RED);
+            }
         }
     }//GEN-LAST:event_jButtonStatementActionPerformed
 
@@ -528,11 +548,7 @@ public class AccountClient extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                try {
-                    new AccountClient(BankSingleton.getInstance()).setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(AccountClient.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                new AccountClient().setVisible(true);
             }
         });
     }

@@ -11,6 +11,7 @@ import br.ufrn.bank.exceptions.InconvenientUserException;
 import br.ufrn.bank.exceptions.InvalidArgumentException;
 import br.ufrn.bank.exceptions.UserAlreadyExistsException;
 import br.ufrn.bank.soap.interfaces.BankWebI;
+import com.sun.xml.ws.client.ClientTransportException;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
@@ -153,6 +154,8 @@ public class BankClient extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Falha de autenticação", "Autenticação", JOptionPane.ERROR_MESSAGE);
             } catch (InvalidArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "Campos inválidos", "Autenticação", JOptionPane.ERROR_MESSAGE);
+            } catch (ClientTransportException ex) {
+                JOptionPane.showMessageDialog(this, "Falha de comunicação com o servidor", "Autenticação", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_jButtonLoginActionPerformed
@@ -171,7 +174,9 @@ public class BankClient extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Usuário existente", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
             } catch (InvalidArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "Campos inválidos", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
-            } 
+            } catch (ClientTransportException ex) {
+                JOptionPane.showMessageDialog(this, "Falha de comunicação com o servidor", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
