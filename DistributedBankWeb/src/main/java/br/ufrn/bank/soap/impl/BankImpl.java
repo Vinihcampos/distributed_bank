@@ -12,6 +12,7 @@ import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.InvalidArgumentException;
 import br.ufrn.bank.exceptions.MissingAuthenticationException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
+import br.ufrn.bank.exceptions.UnauthorizedAccountOperation;
 import br.ufrn.bank.exceptions.UserAlreadyExistsException;
 import br.ufrn.bank.model.Account;
 import br.ufrn.bank.model.Deposit;
@@ -187,35 +188,43 @@ public class BankImpl implements BankWebI {
     }
 
     @Override
-    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException {
+    public void withdraw(Long account, String password, Double value, Boolean updateOperation) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException, UnauthorizedAccountOperation {
          
         if (account == null || password == null || value == null || updateOperation == null)
             throw new InvalidArgumentException("");
         
         if (!isAuthenticated())
             throw new MissingAuthenticationException("");
-        
+                
         if(value <= 0)
             throw new InvalidArgumentException("O saque requer valores positivos!");
         
         if(!accounts.containsKey(account))
             throw new InvalidAccountException(String.valueOf(account));
             
-        if(!accounts.get(account).getPassword().equals(password)) 
-            throw new AccountAuthenticationException("");
+        Account acc = accounts.get(account);
+        
+        if (allowAccountOperation(acc)) {
+        
+            if(!acc.getPassword().equals(password)) 
+                throw new AccountAuthenticationException("");
 
-        if(accounts.get(account).getBalance() < value)
-            throw new NotEnoughBalanceException(String.valueOf(account));
-        
-        accounts.get(account).updateBalance(-value);
-        
-        if(updateOperation){
-            accounts.get(account).updateOperations(new Withdraw(-value));
+            if(acc.getBalance() < value)
+                throw new NotEnoughBalanceException(String.valueOf(account));
+
+            acc.updateBalance(-value);
+
+            if(updateOperation){
+                acc.updateOperations(new Withdraw(-value));
+            }
+            
+        } else {
+            throw new UnauthorizedAccountOperation("");
         }
     }
 
     @Override
-    public void transfer(Long account, String password, Double value, Long anotherAccount) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException {
+    public void transfer(Long account, String password, Double value, Long anotherAccount) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, NotEnoughBalanceException, MissingAuthenticationException, UnauthorizedAccountOperation {
         
        if (account == null || password == null || value == null || anotherAccount == null)
             throw new InvalidArgumentException("");
@@ -239,7 +248,7 @@ public class BankImpl implements BankWebI {
     }
 
     @Override
-    public String[] statement(Long account, String password) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException {
+    public String[] statement(Long account, String password) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException, UnauthorizedAccountOperation {
         
         if (account == null || password == null)
             throw new InvalidArgumentException("");
@@ -250,16 +259,24 @@ public class BankImpl implements BankWebI {
         if (!accounts.containsKey(account))
             throw new InvalidAccountException(String.valueOf(account));
         
-        if (!accounts.get(account).getPassword().equals(password))
-            throw new AccountAuthenticationException("");
+        Account acc = accounts.get(account);
+
+        if (allowAccountOperation(acc)) {
         
-        ArrayList<String> output = accounts.get(account).getStatement();
-        
-        return output.stream().toArray(String[]::new);
+            if (!acc.getPassword().equals(password))
+                throw new AccountAuthenticationException("");
+
+            ArrayList<String> output = acc.getStatement();
+
+            return output.stream().toArray(String[]::new);
+            
+        } else {
+            throw new UnauthorizedAccountOperation("");
+        }
     }
 
     @Override
-    public Double getBalance(Long account, String password) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException {
+    public Double getBalance(Long account, String password) throws InvalidArgumentException, InvalidAccountException, AccountAuthenticationException, MissingAuthenticationException, UnauthorizedAccountOperation {
         
         if (account == null || password == null)
             throw new InvalidArgumentException("");
@@ -270,10 +287,18 @@ public class BankImpl implements BankWebI {
         if (!accounts.containsKey(account))
             throw new InvalidAccountException(String.valueOf(account));
         
-        if (!accounts.get(account).getPassword().equals(password))
-            throw new AccountAuthenticationException("");
+        Account acc = accounts.get(account);
         
-        return accounts.get(account).getBalance();
+        if (allowAccountOperation(acc)) {
+        
+            if (!acc.getPassword().equals(password))
+                throw new AccountAuthenticationException("");
+
+            return acc.getBalance();
+            
+        } else {
+            throw new UnauthorizedAccountOperation("");
+        }
     }
 
 }

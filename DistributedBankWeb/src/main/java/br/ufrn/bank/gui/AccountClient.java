@@ -12,6 +12,7 @@ import br.ufrn.bank.exceptions.InvalidAccountException;
 import br.ufrn.bank.exceptions.InvalidArgumentException;
 import br.ufrn.bank.exceptions.MissingAuthenticationException;
 import br.ufrn.bank.exceptions.NotEnoughBalanceException;
+import br.ufrn.bank.exceptions.UnauthorizedAccountOperation;
 import br.ufrn.bank.rmi.interfaces.IBank;
 import br.ufrn.bank.soap.interfaces.BankWebI;
 import com.sun.xml.ws.client.ClientTransportException;
@@ -349,6 +350,8 @@ public class AccountClient extends javax.swing.JFrame {
                 renewConnection();
             } catch (ClientTransportException ex) {
                 setText("Falha de comunicação com o servidor!", Color.RED);
+            } catch (UnauthorizedAccountOperation ex) {
+                setText("Usuário não tem permissão para esta operação!", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonWithdrawActionPerformed
@@ -435,6 +438,8 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("valores inválidos", Color.RED);
             } catch (ClientTransportException ex) {
                 setText("Falha de comunicação com o servidor!", Color.RED);
+            } catch (UnauthorizedAccountOperation ex) {
+                setText("Usuário não tem permissão para esta operação!", Color.RED);            
             }
         }
     }//GEN-LAST:event_jButtonBalanceActionPerformed
@@ -470,6 +475,8 @@ public class AccountClient extends javax.swing.JFrame {
                 renewConnection();
             } catch (ClientTransportException ex) {
                 setText("Falha de comunicação com o servidor!", Color.RED);
+            } catch (UnauthorizedAccountOperation ex) {
+                setText("Usuário não tem permissão para esta operação!", Color.RED);
             }     
         }
     }//GEN-LAST:event_jButtonTransferActionPerformed
@@ -512,6 +519,8 @@ public class AccountClient extends javax.swing.JFrame {
                 setText("valores inválidos", Color.RED);
             } catch (ClientTransportException ex) {
                 setText("Falha de comunicação com o servidor!", Color.RED);
+            } catch (UnauthorizedAccountOperation ex) {
+                setText("Usuário não tem permissão para esta operação!", Color.RED);
             }
         }
     }//GEN-LAST:event_jButtonStatementActionPerformed
