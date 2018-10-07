@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
@@ -39,7 +40,7 @@ import javax.swing.text.StyleContext;
  *
  * @author vinihcampos
  */
-public class AccountClient extends javax.swing.JFrame {
+public class BankScreen extends javax.swing.JFrame {
     
     private BankWebI bank;
     final String NUMBERS = "0123456789";
@@ -47,12 +48,12 @@ public class AccountClient extends javax.swing.JFrame {
     /**
      * Creates new form BankClient
      */
-    public AccountClient(BankWebI bank){        
+    public BankScreen(BankWebI bank){        
         initComponents();
         this.bank = bank;
     }
     
-    public AccountClient(){
+    public BankScreen(){
         initComponents();
         JOptionPane.showMessageDialog(this, "Operação não permitida", "Falha de comunicação", JOptionPane.ERROR_MESSAGE);
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -61,7 +62,7 @@ public class AccountClient extends javax.swing.JFrame {
     private void renewConnection(){
         JOptionPane.showMessageDialog(this, "Falha de comunicação com o servidor, autentique-se novamente!", "Falha de comunicação", JOptionPane.ERROR_MESSAGE);
         BankSingleton.renewInstance();
-        new BankClient().setVisible(true);
+        new LoginScreen().setVisible(true);
         this.dispose();
     }
     
@@ -120,6 +121,11 @@ public class AccountClient extends javax.swing.JFrame {
         jTextPaneResult = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanelAccount.setBorder(javax.swing.BorderFactory.createTitledBorder("Conta"));
 
@@ -525,6 +531,22 @@ public class AccountClient extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonStatementActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        int option = JOptionPane.showConfirmDialog(this, "Deseja realmente encerrar a sessão?", "Logoff", JOptionPane.YES_NO_OPTION);
+        if(option == JOptionPane.YES_OPTION){
+            try {
+                bank.signOut();
+            } catch (Exception ex) {
+                // Success
+            } finally{
+                new LoginScreen().setVisible(true);
+                this.dispose();
+            }
+        }else{
+            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -542,14 +564,16 @@ public class AccountClient extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AccountClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BankScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AccountClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BankScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AccountClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BankScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AccountClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BankScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -557,7 +581,7 @@ public class AccountClient extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new AccountClient().setVisible(true);
+                new BankScreen().setVisible(true);
             }
         });
     }

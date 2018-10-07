@@ -9,28 +9,36 @@ import br.ufrn.bank.soap.impl.BankSingleton;
 import br.ufrn.bank.exceptions.AuthenticationFailedException;
 import br.ufrn.bank.exceptions.InconvenientUserException;
 import br.ufrn.bank.exceptions.InvalidArgumentException;
+import br.ufrn.bank.exceptions.MissingAuthenticationException;
 import br.ufrn.bank.exceptions.UserAlreadyExistsException;
 import br.ufrn.bank.soap.interfaces.BankWebI;
 import com.sun.xml.ws.client.ClientTransportException;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author vinihcampos
  */
-public class BankClient extends javax.swing.JFrame {
+public class LoginScreen extends javax.swing.JFrame {
     
     private BankWebI bank;
     
     /**
      * Creates new form BankClient
      */
-    public BankClient() {        
+    public LoginScreen() {
+        init();
+    }
+    
+    private void init(){
         initComponents();
         try {
             bank = BankSingleton.getInstance();
         } catch (Exception ex) {
+            System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Erro ao conectar-se com o banco", "Erro de conexão", JOptionPane.ERROR_MESSAGE);
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
@@ -148,7 +156,7 @@ public class BankClient extends javax.swing.JFrame {
         }else{
             try {
                 bank.authenticate(jTextFieldUser.getText(), String.valueOf(jPasswordField.getPassword()));
-                new AccountClient(bank).setVisible(true);
+                new BankScreen(bank).setVisible(true);
                 this.dispose();
             } catch (AuthenticationFailedException ex) {
                 JOptionPane.showMessageDialog(this, "Falha de autenticação", "Autenticação", JOptionPane.ERROR_MESSAGE);
@@ -197,20 +205,21 @@ public class BankClient extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BankClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BankClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BankClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BankClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BankClient().setVisible(true);
+                new LoginScreen().setVisible(true);
             }
         });
     }
