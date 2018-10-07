@@ -38,6 +38,7 @@ public class LoginScreen extends javax.swing.JFrame {
         try {
             bank = BankSingleton.getInstance();
         } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error  " + ex.getMessage());
             System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Erro ao conectar-se com o banco", "Erro de conexão", JOptionPane.ERROR_MESSAGE);
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
