@@ -38,8 +38,6 @@ public class LoginScreen extends javax.swing.JFrame {
         try {
             bank = BankSingleton.getInstance();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error  " + ex.getMessage());
-            System.err.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Erro ao conectar-se com o banco", "Erro de conexão", JOptionPane.ERROR_MESSAGE);
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
@@ -179,12 +177,14 @@ public class LoginScreen extends javax.swing.JFrame {
                 bank.createUser(jTextFieldUser.getText(), String.valueOf(jPasswordField.getPassword()));
                 clearInputs();
                 JOptionPane.showMessageDialog(this, "Usuário criado com sucesso!", "Criação de usuário", JOptionPane.INFORMATION_MESSAGE);
-            } catch (UserAlreadyExistsException | InconvenientUserException ex) {
+            } catch (UserAlreadyExistsException ex) {
                 JOptionPane.showMessageDialog(this, "Usuário existente", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
             } catch (InvalidArgumentException ex) {
                 JOptionPane.showMessageDialog(this, "Campos inválidos", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
             } catch (ClientTransportException ex) {
                 JOptionPane.showMessageDialog(this, "Falha de comunicação com o servidor", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
+            } catch (InconvenientUserException ex) {
+                JOptionPane.showMessageDialog(this, "Sessão ainda está ativa", "Criação de usuário", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

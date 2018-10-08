@@ -71,7 +71,7 @@ public class BankImpl implements BankWebI {
             throw new WebServiceException("Missing HTTP session");
         } else {
             if (session.getAttribute("authenticatedUser") != null) {
-                session.setAttribute("authenticatedUser", null);
+                session.removeAttribute("authenticatedUser");
                 session.invalidate();
             } else {
                 throw new MissingAuthenticationException("");
