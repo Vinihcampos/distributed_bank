@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -120,8 +121,8 @@ public class LoginScreen extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelPassword)
                     .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonCreate)
                     .addComponent(jButtonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -155,7 +156,7 @@ public class LoginScreen extends javax.swing.JFrame {
         }else{
             try {
                 bank.authenticate(jTextFieldUser.getText(), String.valueOf(jPasswordField.getPassword()));
-                new BankScreen(bank).setVisible(true);
+                new BankScreen(bank, jTextFieldUser.getText()).setVisible(true);
                 this.dispose();
             } catch (AuthenticationFailedException ex) {
                 JOptionPane.showMessageDialog(this, "Falha de autenticação", "Autenticação", JOptionPane.ERROR_MESSAGE);
@@ -219,7 +220,12 @@ public class LoginScreen extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            public void run() {                
+                try {
+                    UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+                } catch (Exception ex) {
+                    Logger.getLogger(BankScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 new LoginScreen().setVisible(true);
             }
         });

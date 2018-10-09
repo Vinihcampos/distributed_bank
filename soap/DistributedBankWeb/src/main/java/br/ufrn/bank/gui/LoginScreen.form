@@ -90,10 +90,10 @@
                       <Component id="jLabelPassword" min="-2" max="-2" attributes="0"/>
                       <Component id="jPasswordField" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButtonCreate" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonLogin" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jButtonCreate" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonLogin" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
